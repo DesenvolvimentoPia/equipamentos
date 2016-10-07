@@ -140,7 +140,7 @@ nav a {
     color: #FFF;
     font-family: "Champagne & Limousines", 'Champagne';
     font-size: 20px;
-    border-bottom: 5px #EEE solid;
+    border-bottom: 5px rgba(223,223,223,0) solid;
     cursor: pointer;
     transition: all 0.43s;
     -o-transition: all 0.43s;
@@ -492,6 +492,10 @@ img#logoInterno {
     vertical-align: middle;
     float: left;
     margin: -6px -145px 0 12px;
+    transition: all 0.43s;
+    -o-transition: all 0.43s;
+    -moz-transition: all 0.43s;
+    -webkit-transition: all 0.43s;
 }
 
 .linhaResultado7 .colunaResultado {

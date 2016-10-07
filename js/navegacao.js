@@ -26,4 +26,31 @@ $(document).ready(function() {
 		if($( window ).scrollTop() > 1240) 	$('#backToTop').fadeIn();
 		else $('#backToTop').fadeOut();
 	});
+
+	$( window ).scroll(function() {
+		if($( window ).scrollTop() > 75) {
+			$('nav').css('position', 'fixed');
+			$('nav').css('top', '0px');
+			$('#logoInterno').css('position', 'fixed');
+			$('#logoInterno').css('z-index', '9999');
+			$('#logoInterno').css('top', '4px');
+			$('#logoInterno').css('left', '0px');
+			$('#logoInterno').css('margin-left', '0px');
+			$('#logoInterno').css('width', '116px');
+			$('#logoInterno').css('background', 'rgb(51, 51, 51');
+			$('#logoInterno').css('padding', '10px 12px');
+			$('nav').css('z-index', '9997');  
+		}
+		else {
+			$('nav').css('position', 'relative');
+			$('#logoInterno').css('z-index', '9999');
+			$('#logoInterno').css('position', 'relative');
+			$('nav').css('z-index', '9997');
+			$('#logoInterno').css('top', '0px');
+			$('#logoInterno').css('width', '133px');
+			$('#logoInterno').css('margin-left', '12px');
+			$('#logoInterno').css('background', 'transparent');
+			$('#logoInterno').css('padding', '0px');
+		}
+	});
 });
