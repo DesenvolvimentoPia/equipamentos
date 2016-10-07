@@ -1,0 +1,64 @@
+<?php
+
+include "../conexao.php";
+
+?>
+
+<a href="./" id="botaoVoltar">Voltar</a>
+
+<section class="aparelho">
+	<h2>Adicionar Chip</h2>
+
+	<form id="editarAparelho" action="./" method="post">
+	<input type="hidden" name="hiddenNovoChip" value="true">
+
+	<input placeholder="Número" type="text" name="inputNumero" id="inputNumero" required><span>*</span>
+	<input placeholder="Situação" type="text" name="inputSituacao" id="inputSituacao" required><span>*</span>
+
+	<input type="hidden" name="inputNormal" id="inputNormal">
+	<input type="hidden" name="inputMicro" id="inputMicro">
+	<input type="hidden" name="inputNano" id="inputNano">
+
+	<a class="nmn" id="nmnNormal">Normal</a><a class="nmn" id="nmnMicro">Micro</a><a class="nmn" id="nmnNano">Nano</a>
+
+	<select name="inputLinha" id="inputLinha">
+		<option value="0" selected>Sem Linha</option>
+		<?php
+		$sqlChip = "SELECT * FROM relatorios_linhas ORDER BY id";
+		$resChip = mysql_query($sqlChip, $con);
+		$numChip = mysql_num_rows($resChip);
+
+		for($x = 0; $x < $numChip; $x++) {
+			$rowChip = mysql_fetch_array($resChip);
+		?>		
+		<option value="<?=$rowChip['id']?>"><?=$rowChip['numero']?></option>
+		<?php } ?>
+	</select>
+
+	<script>
+
+	$(function() {
+		$('.nmn').click(function() {
+			if(this.className == "nmn") {
+				this.className = "nmn selecionado";
+				if (this.id == "nmnNormal") document.getElementById('inputNormal').value = "X";
+				else if (this.id == "nmnMicro") document.getElementById('inputMicro').value = "X";
+				else document.getElementById('inputNano').value = "X";
+			}
+			else {
+				this.className = "nmn";
+				if (this.id == "nmnNormal") document.getElementById('inputNormal').value = "";
+				else if (this.id == "nmnMicro") document.getElementById('inputMicro').value = "";
+				else document.getElementById('inputNano').value = "";
+			}
+		});
+	});
+
+	</script>
+
+	<input type="submit" name="enviar" >
+
+	</form>
+</section>
+
+

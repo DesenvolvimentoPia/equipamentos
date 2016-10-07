@@ -1,0 +1,48 @@
+<?php
+
+include "../conexao.php";
+
+?>
+
+<a href="./" id="botaoVoltar">Voltar</a>
+
+<section class="aparelho">
+	<h2>Adicionar Movimento</h2>
+
+	<form id="editarAparelho" action="./" method="post">
+	<input type="hidden" name="hiddenNovoMovimento" value="true">
+
+	<select name="inputTipoItem" id="inputTipoItem" required>
+		<option value="">Tipo de Item</option>
+		<option value="telefones">Telefone</option>
+		<option value="modens">Modem</option>
+		<option value="chips">Chip</option>
+	</select><span>*</span>
+
+	<input placeholder="ID do Item" type="text" name="inputIdItem" id="inputIdItem" required><span>*</span>
+
+	<select name="inputDirecao" id="inputDirecao" required>
+		<option value="">Movimento</option>
+		<option value="Entrega">Entrega</option>
+		<option value="Devolu&ccedil;&atilde;o">Devolução</option>
+	</select><span>*</span>
+
+
+	<select name="inputTipoUsuario" id="inputTipoUsuario" required>
+		<option value="">Tipo de Usuário</option>
+		<option value="Usuário">Usuário</option>
+		<option value="Grupo">Grupo</option>
+	</select><span>*</span>
+
+	<input placeholder="Nome do Usuário" type="text" name="inputUsuario" id="inputUsuario" required><span>*</span>
+	<input placeholder="Matrícula do Usuário" type="text" name="inputMatricula" id="inputMatricula" required><span>*</span>
+	<input placeholder="Situação" type="text" name="inputSituacao" id="inputSituacao" required><span>*</span>
+	
+	<textarea placeholder="Descrição Complementar" name="inputDescricao" id="inputDescricao"></textarea>
+
+	<input type="submit" name="enviar">
+
+	</form>
+</section>
+
+

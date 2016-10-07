@@ -1,0 +1,288 @@
+<?php
+
+// Arquivo de Corpo
+
+include "../conexao.php";
+
+
+
+
+/* Trecho Responsável pela adição de um Modem no Banco de Dados */
+
+if(!empty($_POST['hiddenNovoMovimento'])) {
+	$sql = "INSERT INTO relatorios_movimentos VALUES ('', '".$_POST['inputTipoItem']."', '".$_POST['inputIdItem']."', '".$_POST['inputDirecao']."', '".$_POST['inputTipoUsuario']."', '".$_POST['inputUsuario']."', '".$_POST['inputMatricula']."', '".date("Y-m-d H:i:s")."', '".$_POST['inputSituacao']."', '".$_POST['inputDescricao']."')";
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Movimento Adicionado', '".date("Y-m-d H:i:s")."', 'Um Novo Movimento foi Adicionado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	$sqlMov = "SELECT * FROM relatorios_movimentos ORDER BY id DESC";
+	$resMov = mysql_query($sqlMov, $con);
+	$rowMov = mysql_fetch_array($resMov);
+
+	$resultado = "Movimento Inserido com Sucesso!";
+
+	if($_POST['inputTipoItem'] == "impressoras" && $_POST['inputDirecao'] == "Entrega") {
+
+		$sqlCel = "SELECT relatorios_impressoras.id, relatorios_impressoras.marca, relatorios_impressoras.modelo, relatorios_impressoras.imei, relatorios_impressoras.pin, relatorios_chips.id AS chip, relatorios_linhas.id AS linha FROM relatorios_impressoras 
+		LEFT JOIN relatorios_chips ON
+		relatorios_impressoras.id_chip = relatorios_chips.id
+		
+		LEFT JOIN relatorios_linhas ON
+		relatorios_chips.id_linha = relatorios_linhas.id
+		
+		WHERE relatorios_impressoras.id = '".$_POST['inputIdItem']."'";
+		$resCel = mysql_query($sqlCel, $con);
+		$rowCel = mysql_fetch_array($resCel);
+
+		if(!empty($rowCel['id'])) {
+			$sqlChip = "UPDATE relatorios_impressoras SET situacao = '".$_POST['inputSituacao']."', usuario = '".$_POST['inputUsuario']."', matricula = '".$_POST['inputMatricula']."' WHERE id = ".$rowCel['id'];
+			$resChip = mysql_query($sqlChip, $con);
+	//		echo $sqlChip;
+		}
+
+	//	echo $sqlCel;
+
+		if(!empty($rowCel['chip'])) {
+			$sqlChip = "UPDATE relatorios_chips SET situacao = '".$_POST['inputSituacao']."' WHERE id = ".$rowCel['chip'];
+			$resChip = mysql_query($sqlChip, $con);
+	//		echo $sqlChip;
+		}
+
+		if(!empty($rowCel['linha'])) {
+			$sqlChip = "UPDATE relatorios_linhas SET situacao = '".$_POST['inputSituacao']."' WHERE id = ".$rowCel['linha'];
+			$resChip = mysql_query($sqlChip, $con);
+	//		echo $sqlChip;
+		}
+
+	?><script>var win = window.open('entregaCelularTermo.php?usuario=<?=$_POST['inputUsuario'];?>&matricula=<?=$_POST['inputMatricula'];?>&imei=<?=$rowCel['imei'];?>&pin=<?=$rowCel['pin'];?>&marca=<?=$rowCel['marca'];?>&modelo=<?=$rowCel['modelo'];?>&codigoCelular=<?=$rowCel['id'];?>&codigoMovimento=<?=$rowMov['id'];?>', '_blank');</script><?php
+	}
+}
+
+
+
+
+
+
+
+
+
+
+/* Trecho Responsável pela edição de um Chip no Banco de Dados */
+
+if(!empty($_POST['hiddenChip'])) {
+	$sql = "UPDATE relatorios_chips SET numero = '".$_POST['inputNumero']."', situacao = '".$_POST['inputSituacao']."', normal = '".$_POST['inputNormal']."', micro = '".$_POST['inputMicro']."', nano = '".$_POST['inputNano']."', id_linha = '".$_POST['inputLinha']."' WHERE id=".$_POST['hiddenChip'];
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Chip Editado', '".date("Y-m-d H:i:s")."', 'O Chip ".$_POST['hiddenChip']." foi Editado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	//echo "AQUI: ".$sql1;
+
+	$resultado = "Chip Alterado com Sucesso!";
+}
+
+
+/* Trecho Responsável pela adição de um Chip no Banco de Dados */
+
+if(!empty($_POST['hiddenNovoChip'])) {
+	$sql = "INSERT INTO relatorios_chips VALUES ('', '".$_POST['inputNumero']."', '".$_POST['inputNormal']."', '".$_POST['inputMicro']."', '".$_POST['inputNano']."', '".$_POST['inputLinha']."', '".$_POST['inputSituacao']."')";
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Chip Adicionado', '".date("Y-m-d H:i:s")."', 'Um Novo Chip foi Adicionado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	$resultado = "Chip Inserido com Sucesso!";
+}
+
+
+
+
+
+
+
+
+
+/* Trecho Responsável pela edição de uma Linha no Banco de Dados */
+
+if(!empty($_POST['hiddenLinha'])) {
+	$sql = "UPDATE relatorios_linhas SET numero = '".$_POST['inputNumero']."', situacao = '".$_POST['inputSituacao']."', status = '".$_POST['inputStatus']."' WHERE id=".$_POST['hiddenLinha'];
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Linha Editada', '".date("Y-m-d H:i:s")."', 'A Linha ".$_POST['hiddenLinha']." foi Editada com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	//echo "AQUI: ".$sql1;
+
+	$resultado = "Linha Alterada com Sucesso!";
+}
+
+
+/* Trecho Responsável pela adição de uma Linha no Banco de Dados */
+
+if(!empty($_POST['hiddenNovoLinha'])) {
+	$sql = "INSERT INTO relatorios_linhas VALUES ('', '".$_POST['inputNumero']."', '".$_POST['inputSituacao']."', '".$_POST['inputStatus']."')";
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Linha Adicionada', '".date("Y-m-d H:i:s")."', 'Uma Nova Linha foi Adicionada com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	$resultado = "Linha Inserida com Sucesso!";
+}
+
+
+
+
+
+/* Trecho Responsável pela edição de um Modem no Banco de Dados */
+
+if(!empty($_POST['hiddenModem'])) {
+	$sql = "UPDATE relatorios_modens SET operadora = '".$_POST['inputOperadora']."', imei = '".$_POST['inputImei']."', situacao = '".$_POST['inputSituacao']."', usuario = '".$_POST['inputUsuario']."', matricula = '".$_POST['inputMatriculaUsuario']."', setor = '".$_POST['inputSetor']."', unidade = '".$_POST['inputUnidade']."', id_chip = '".$_POST['inputChip']."' WHERE id=".$_POST['hiddenModem'];
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Modem Editado', '".date("Y-m-d H:i:s")."', 'O Modem ".$_POST['hiddenModem']." foi Editado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	//echo "AQUI: ".$sql1;
+
+	$resultado = "Modem Alterado com Sucesso!";
+}
+
+
+/* Trecho Responsável pela adição de um Modem no Banco de Dados */
+
+if(!empty($_POST['hiddenNovoModem'])) {
+	$sql = "INSERT INTO relatorios_modens VALUES ('', '".$_POST['inputOperadora']."', '".$_POST['inputImei']."', '".$_POST['inputSituacao']."', '".$_POST['inputUsuario']."', '".$_POST['inputMatriculaUsuario']."', '".$_POST['inputSetor']."', '".$_POST['inputUnidade']."', '".$_POST['inputChip']."')";
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Modem Adicionado', '".date("Y-m-d H:i:s")."', 'Um Novo Modem foi Adicionado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	$resultado = "Modem Inserido com Sucesso!";
+}
+
+
+
+
+/* Trecho Responsável pela edição de um Aparelho no Banco de Dados */
+
+
+if(!empty($_POST['hiddenAparelho'])) {
+	$sql = "UPDATE relatorios_impressoras SET marca = '".$_POST['inputMarca']."', modelo = '".$_POST['inputModelo']."', imei = '".$_POST['inputImei']."', pin = '".$_POST['inputPin']."', situacao = '".$_POST['inputSituacao']."', problema = '".$_POST['inputProblema']."', usuario = '".$_POST['inputUsuario']."', matricula = '".$_POST['inputMatriculaUsuario']."', setor = '".$_POST['inputSetor']."', unidade = '".$_POST['inputUnidade']."', id_chip = '".$_POST['inputChip']."' WHERE id=".$_POST['hiddenAparelho'];
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Telefone Editado', '".date("Y-m-d H:i:s")."', 'O Telefone ".$_POST['hiddenAparelho']." foi Editado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	//echo "AQUI: ".$sql1;
+
+	$resultado = "Aparelho Alterado com Sucesso!";
+}
+
+
+/* Trecho Responsável pela adição de um Aparelho no Banco de Dados */
+
+if(!empty($_POST['hiddenNovoAparelho'])) {
+	$sql = "INSERT INTO relatorios_impressoras VALUES ('', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$_POST['inputImei']."', '".$_POST['inputPin']."', '".$_POST['inputSituacao']."', '".$_POST['inputProblema']."', '".$_POST['inputUsuario']."', '".$_POST['inputSetor']."', '".$_POST['inputUnidade']."', '".$_POST['inputMatriculaUsuario']."', '".$_POST['inputChip']."')";
+	$res = mysql_query($sql, $con);
+
+	$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Telefone Adicionado', '".date("Y-m-d H:i:s")."', 'Um Novo Telefone foi Adicionado com Sucesso.', '".$_SESSION['userId']."', '2')";
+	$res1= mysql_query($sql1, $con);
+
+	$resultado = "Aparelho Inserido com Sucesso!";
+}
+
+if(!empty($_POST['hiddenTransp'])){
+?>
+
+<style> #home {	display: none;} #transportadoras { display: block;} </style>
+
+<?php	
+}
+
+else if(!empty($_POST['hiddenEstados'])){
+?>
+
+<style> #home {	display: none;} #estados { display: block;} </style>
+
+<?php		
+}
+
+else if(!empty($_POST['hiddenHistorico'])){
+?>
+
+<style> #home {	display: none;} #historico { display: block;} </style>
+
+<?php		
+}
+
+?>
+
+<body>
+
+<?php if(isset($resultado)) { ?>
+
+<script>
+
+$(function(){
+	$("#sombra").click(function(){
+		$("#sombra").fadeOut();
+		$("#resultadoSql").fadeOut();
+	});
+});
+
+</script>
+
+<div id="sombra"></div>
+
+<div id="resultadoSql"><?=$resultado;?></div>
+<?php } ?>
+
+
+<header>
+	<h1><img src="../img/logo2.png" id="logoInterno">Controle de Equipamentos - PIÁ</h1>
+
+	<nav>
+		<a href="#home" class="acao selecionado">Home</a>
+		<a href="#notebooks" class="acao">Notebooks</a>
+		<a href="#impressoras" class="acao">Impressoras</a>
+		<a href="#movimentos" class="acao">Movimentos</a>
+		<a href="#perfis" class="acao">Perfis</a>
+		<a href="#historico" class="acao">Histórico</a>
+		<a href="../">Voltar</a>
+	</nav>
+
+</header>
+
+<main>
+	
+<section id="home">
+	<?php include "sections/home.tpl"; ?>
+</section>
+
+<section id="impressoras" ng-app="appImpressoras" ng-controller="myCtrlImpressoras">
+	<?php include "sections/impressoras.tpl"; ?>
+</section>
+
+<section id="notebooks" ng-app="appNotebooks" ng-controller="myCtrlNotebooks">
+	<?php include "sections/notebooks.tpl"; ?>
+</section>
+
+<section id="movimentos" ng-app="appMovimentos" ng-controller="myCtrlMovimentos">
+	<?php include "sections/movimentos.tpl"; ?>
+</section>
+
+<section id="historico" ng-app="appHistorico" ng-controller="myCtrlHistorico">
+	<?php include "sections/historico.tpl"; ?>
+</section>
+
+<section id="perfis" ng-app="appPerfis" ng-controller="myCtrlPerfis">
+	<?php include "sections/perfil.tpl"; ?>
+</section>
+
+
+<a id="backToTop">^</a>
+
+</main>
+
+</body>
