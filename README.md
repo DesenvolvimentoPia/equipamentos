@@ -15,3 +15,5 @@ Breve Descrição: controleTelefones é um módulo dos Relatórios de Suporte - 
 3- Dentro do Módulo é possível optar entre quatro Categorias: Telefones, Chips, Linhas e Modens;  
 4- É possível selecionar um Item na Lista para Editá-lo;  
 5- É possível Inserir Novos Itens de qualquer Categoria.
+=======
+# equipamentos

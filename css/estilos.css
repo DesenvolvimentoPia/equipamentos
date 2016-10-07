@@ -229,7 +229,7 @@ a.acao.selecionado {
     border-color: #38C;
 }
 
-.linhaResultado, .linhaResultado3, .linhaResultado4, .linhaResultado5, .linhaResultado6, .linhaResultado1 {
+.linhaResultado, .linhaResultado7, .linhaResultado4, .linhaResultado5, .linhaResultado6, .linhaResultado1 {
     display: block;
     padding: 12px 2%;
     width: 86%;
@@ -237,7 +237,7 @@ a.acao.selecionado {
     text-align: center;
 }
 
-.linhaResultado:nth-child(odd), .linhaResultado3:nth-child(odd), .linhaResultado4:nth-child(odd), .linhaResultado5:nth-child(odd), .linhaResultado6:nth-child(odd), .linhaResultado1:nth-child(odd) {
+.linhaResultado:nth-child(odd), .linhaResultado7:nth-child(odd), .linhaResultado4:nth-child(odd), .linhaResultado5:nth-child(odd), .linhaResultado6:nth-child(odd), .linhaResultado1:nth-child(odd) {
 	background: #CCC;
 }
 
@@ -318,7 +318,7 @@ a.linkTitulo2 {
     width: 25%;
 }
 
-.linhaResultado:hover, .linhaResultado3:hover, .linhaResultado4:hover, .linhaResultado5:hover, .linhaResultado6, .linhaResultado1:hover {
+.linhaResultado:hover, .linhaResultado7:hover, .linhaResultado4:hover, .linhaResultado5:hover, .linhaResultado6:hover, .linhaResultado1:hover {
     background: #578fce;
     color: #FFF;
     cursor: pointer;
@@ -494,8 +494,8 @@ img#logoInterno {
     margin: -6px -145px 0 12px;
 }
 
-.linhaResultado3 .colunaResultado {
-    width: 16%;
+.linhaResultado7 .colunaResultado {
+    width: 14%;
     min-height: 14px;
 }
 
