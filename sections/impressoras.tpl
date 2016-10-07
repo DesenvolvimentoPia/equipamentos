@@ -34,15 +34,16 @@
 
 	$sql = "SELECT * FROM relatorios_impressoras WHERE disponivel = '1' ORDER BY id DESC";
 	//echo $sql;
-	$res = mysql_query($sql, $con);
-	$num = mysql_num_rows($res);
+	$res = sqlsrv_query($con, $sql);
 
-	for($i = 0; $i < $num; $i++) {
-	$row = mysql_fetch_array($res);
+	$i = 0;
+	 while($row = sqlsrv_fetch_array($res)) {
 		if($i == 0) echo "{";
 		else echo ", {";
 		echo "'id': ".$row['id'].", 'marca': '".$row['tipo']."', 'modelo': '".$row['modelo']."', 'situacao': '".$row['situacao']."', 'usuario': '".$row['nome']."', 'patrimonio': '".$row['ip']."', 'setor': '".$row['setor']."', 'unidade': '".$row['unidade']."', 'problema': '".$row['lanpiaprn']."' }";
+		$i++;
 	}
+
 	
 	?>
 

@@ -34,11 +34,11 @@
 	<?php
 
 	$sql = "SELECT * FROM relatorios_movimentos ORDER BY id DESC";
-	$res = mysql_query($sql, $con);
-	$num = mysql_num_rows($res);
+	$res = sqlsrv_query($con, $sql);
+	$num = sqlsrv_num_rows($res);
 
 	for($i = 0; $i < $num; $i++) {
-	$row = mysql_fetch_array($res);
+	$row = sqlsrv_fetch_array($res);
 		if($i == 0) echo "{";
 		else echo ", {";
 		echo "'diaHora': '".$row['data']."', 'direcao': '".$row['direcao']."', 'id': ".$row['id'].", 'usuario': '".$row['usuario']."', 'tipo_item': '".$row['tipo_item']."', 'id_item': ".$row['id_item']." }";

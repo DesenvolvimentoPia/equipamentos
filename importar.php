@@ -23,35 +23,35 @@ for($x = 0; $x < count($arquivo); $x++){
 
 
 		$sqlLinha = "SELECT * FROM relatorios_linhas WHERE numero = '".$linha."'";
-		$resLinha = mysql_query($sqlLinha, $con);
-		$numLinha = mysql_num_rows($resLinha);
+		$resLinha = sqlsrv_query($sqlLinha, $con);
+		$numLinha = sqlsrv_num_rows($resLinha);
 
 		echo " A Linha existe: ".$numLinha;
 
 		$sql = "INSERT INTO relatorios_linhas VALUES ('', '".$linha."', '".$situacao."', 'Voz')";
-		$res = mysql_query($sql, $con);
+		$res = sqlsrv_query($con, $sql);
 
 		$sqlId = "SELECT *FROM relatorios_linhas ORDER BY id DESC";
-		$resId = mysql_query($sqlId, $con);
-		$rowId = mysql_fetch_array($resId);
+		$resId = sqlsrv_query($sqlId, $con);
+		$rowId = sqlsrv_fetch_array($resId);
 
 		$sqlChip = "SELECT * FROM relatorios_chips WHERE numero = '".$numero."'";
-		$resChip = mysql_query($sqlChip, $con);
-		$numChip = mysql_num_rows($resChip);
+		$resChip = sqlsrv_query($sqlChip, $con);
+		$numChip = sqlsrv_num_rows($resChip);
 
 		echo " Número de Linhas: ".$numChip;
 
 		if ($numChip > 0) {
-			$rowChip = mysql_fetch_array($resChip);
+			$rowChip = sqlsrv_fetch_array($resChip);
 			$sql = "UPDATE relatorios_chips VALUES  numero = '".$numero."', id_linha = '".$rowId['id']."', situacao = '".$situacao."' WHERE id =".$rowChip['id'];
-			$res = mysql_query($sql, $con);
+			$res = sqlsrv_query($con, $sql);
 		}
 
 
 		else {
 			if (strlen($numero) > 10) {
 				$sql = "INSERT INTO relatorios_chips VALUES ('', '".$numero."', '', '', '', '".$rowId['id']."', '".$situacao."')";
-				$res = mysql_query($sql, $con);
+				$res = sqlsrv_query($con, $sql);
 			}
 		}
 

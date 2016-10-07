@@ -5,8 +5,8 @@
 include "../conexao.php";
 
 $sqlAparelho = "SELECT * FROM relatorios_chips WHERE id=".$_GET['id'];
-$resAparelho = mysql_query($sqlAparelho, $con);
-$rowAparelho = mysql_fetch_array($resAparelho);
+$resAparelho = sqlsrv_query($sqlAparelho, $con);
+$rowAparelho = sqlsrv_fetch_array($resAparelho);
 
 ?>
 
@@ -32,12 +32,12 @@ $rowAparelho = mysql_fetch_array($resAparelho);
 		<option value="0" selected>Sem Linha</option>
 		<?php
 		$sqlLinha = "SELECT * FROM relatorios_linhas ORDER BY id";
-		$resLinha = mysql_query($sqlLinha, $con);
-		$numLinha = mysql_num_rows($resLinha);
+		$resLinha = sqlsrv_query($sqlLinha, $con);
+		$numLinha = sqlsrv_num_rows($resLinha);
 
 		for($x = 0; $x < $numLinha; $x++) {
 
-			$rowLinha = mysql_fetch_array($resLinha);
+			$rowLinha = sqlsrv_fetch_array($resLinha);
 		?>		
 		<option <?php if($rowAparelho['id_linha'] == $rowLinha['id']) echo "selected"; ?> value="<?=$rowLinha['id']?>"><?=$rowLinha['numero']?></option>
 		<?php } ?>

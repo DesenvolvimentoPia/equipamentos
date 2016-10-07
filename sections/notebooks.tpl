@@ -32,15 +32,17 @@
 
 	<?php
 
-	$sql = "SELECT * FROM relatorios_notebooks ORDER BY id DESC";
-	$res = mysql_query($sql, $con);
-	$num = mysql_num_rows($res);
+	$sql = "SELECT * FROM relatorios_notebooks WHERE disponivel = '1' ORDER BY id DESC";
+	//echo $sql;
+	$res = sqlsrv_query($con, $sql);
 
-	for($i = 0; $i < $num; $i++) {
-	$row = mysql_fetch_array($res);
+	$i = 0;
+	 while($row = sqlsrv_fetch_array($res)) {
 		if($i == 0) echo "{";
 		else echo ", {";
 		echo "'id': ".$row['id'].", 'marca': '".$row['marca']."', 'modelo': '".$row['modelo']."', 'situacao': '".$row['situacao']."', 'usuario': '".$row['usuario']."', 'patrimonio': '".$row['patrimonio']."', 'setor': '".$row['setor']."', 'unidade': '".$row['unidade']."', 'problema': '".$row['problema']."' }";
+
+		$i++;
 	}
 	
 	?>

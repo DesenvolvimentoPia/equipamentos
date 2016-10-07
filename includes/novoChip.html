@@ -25,11 +25,11 @@ include "../conexao.php";
 		<option value="0" selected>Sem Linha</option>
 		<?php
 		$sqlChip = "SELECT * FROM relatorios_linhas ORDER BY id";
-		$resChip = mysql_query($sqlChip, $con);
-		$numChip = mysql_num_rows($resChip);
+		$resChip = sqlsrv_query($sqlChip, $con);
+		$numChip = sqlsrv_num_rows($resChip);
 
 		for($x = 0; $x < $numChip; $x++) {
-			$rowChip = mysql_fetch_array($resChip);
+			$rowChip = sqlsrv_fetch_array($resChip);
 		?>		
 		<option value="<?=$rowChip['id']?>"><?=$rowChip['numero']?></option>
 		<?php } ?>

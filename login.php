@@ -13,21 +13,28 @@ if(!empty($_SESSION['usuario'])) header("location: ./");
 
 else {
 
-include "conexao.php";
+$db_server = '10.1.10.130\Teste';
+$db_database = 'integracoes';
+$db_user = 'soa';
+$db_passwd = 'Fr@m3work';
+
+$connectionInfo = array("Database"=>$db_database, "UID"=>$db_user, "PWD"=>$db_passwd);
+$con = sqlsrv_connect($db_server, $connectionInfo);
 
 if(!empty($_POST)) {
-	$sql = "SELECT * FROM relatorios_usuarios WHERE login = '".$_POST['usuario']."' AND senha = '".$_POST['senha']."'";
-	$res = mysql_query($sql, $con);
-	$num = mysql_num_rows($res);
+	$sql = "SELECT * FROM relatorios_usuarios WHERE login LIKE '".$_POST['usuario']."' AND senha LIKE '".$_POST['senha']."'";
+	$res = sqlsrv_query($con, $sql);
+	//echo $sql;
+	$num = sqlsrv_has_rows($res);
 	if($num > 0) {
-		$row = mysql_fetch_array($res);
+		$row = sqlsrv_fetch_array($res);
 		$_SESSION['usuario'] = $row['login'];
 		$_SESSION['nome'] = $row['nome'];
 		$_SESSION['userId'] = $row['id'];
 		$_SESSION['acesso'] = $row['acesso'];
 		
 		$sql = "INSERT INTO relatorios_historico VALUES ('', 'Login Usuário', '".date("Y-m-d H:i:s")."', 'Login Realizado com Sucesso.', '".$row['id']."', '0')";
-		$res = mysql_query($sql, $con);
+		$res = sqlsrv_query($con, $sql);
 		
 		header("location: ./");
 	}

@@ -30,15 +30,15 @@
 
 	<?php
 
-	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 2 OR sistema = 0 ORDER BY relatorios_historico.id DESC";
-	$res = mysql_query($sql, $con);
-	$num = mysql_num_rows($res);
+	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 2 OR sistema = 0 ORDER BY relatorios_historico.hora DESC";
+	$res = sqlsrv_query($con, $sql);
 
-	for($i = 0; $i < $num; $i++) {
-	$row = mysql_fetch_array($res);
+	$i = 0;
+	 while($row = sqlsrv_fetch_array($res)) {
 		if($i == 0) echo "{";
 		else echo ", {";
-		echo "'diaHora': '".$row['hora']."', 'evento': '".$row['nome']."', 'descricao': '".$row['descricao']."', 'usuario': '".$row['usuario']."' }";
+		echo "'diaHora': '".$row['hora']->format('d/m/Y')."', 'evento': '".$row['nome']."', 'descricao': '".$row['descricao']."', 'usuario': '".$row['usuario']."' }";
+		$i++;
 	}
 	
 	?>
