@@ -30,7 +30,7 @@
 
 	<?php
 
-	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 2 OR sistema = 0 ORDER BY relatorios_historico.hora DESC";
+	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 7 OR sistema = 0 ORDER BY relatorios_historico.hora DESC";
 	$res = sqlsrv_query($con, $sql);
 
 	$i = 0;

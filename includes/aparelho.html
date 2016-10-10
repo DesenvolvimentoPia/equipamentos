@@ -2,53 +2,93 @@
 
 // Arquivo de Corpo
 
-include "../conexao.php";
+include "./conexao.php";
 
-$sqlAparelho = "SELECT * FROM relatorios_telefones WHERE id=".$_GET['id'];
-$resAparelho = sqlsrv_query($sqlAparelho, $con);
-$rowAparelho = sqlsrv_fetch_array($resAparelho);
+$sqlEquipamento = "SELECT * FROM relatorios_equipamentos WHERE id=".$_GET['id'];
+$resEquipamento = sqlsrv_query($con, $sqlEquipamento);
+$rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 ?>
 
-<a href="./" id="botaoVoltar">Voltar</a>
-
 
 <section class="aparelho">
-	<h2>Editar Aparelho - <?=$rowAparelho['id']?></h2>
+	<h2>Editar Equipamento - <?=$rowEquipamento['id']?></h2>
 
-	<form id="editarAparelho" action="./" method="post">
-	<input type="hidden" name="hiddenAparelho" value="<?=$rowAparelho['id']?>">
+	<form id="editarEquipamento" action="./" method="post">
+	<input type="hidden" name="hiddenUpdate" value="true">
+	<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
 
-	<input value="<?=$rowAparelho['marca']?>" placeholder="Marca" type="text" name="inputMarca" id="inputMarca" required><span>*</span>
-	<input value="<?=$rowAparelho['modelo']?>" placeholder="Modelo" type="text" name="inputModelo" id="inputModelo" required><span>*</span>
-	<input value="<?=$rowAparelho['imei']?>" placeholder="IMEI" type="text" name="inputImei" id="inputImei" required><span>*</span>
-	<input value="<?=$rowAparelho['pin']?>" placeholder="PIN" type="text" name="inputPin" id="inputPin">
-	<input value="<?=$rowAparelho['situacao']?>" placeholder="Situação" type="text" name="inputSituacao" id="inputSituacao" required><span>*</span>
-	<input value="<?=$rowAparelho['usuario']?>" placeholder="Usuário" type="text" name="inputUsuario" id="inputUsuario">
-	<input value="<?=$rowAparelho['matricula']?>" placeholder="Matrícula" type="text" name="inputMatriculaUsuario" id="inputMatriculaUsuario">
-	<input value="<?=$rowAparelho['setor']?>" placeholder="Setor" type="text" name="inputSetor" id="inputSetor">
-	<input value="<?=$rowAparelho['unidade']?>" placeholder="Unidade" type="text" name="inputUnidade" id="inputUnidade">
-
-	<select name="inputChip" id="inputChip">
-		<option value="0" selected>Sem Chip</option>
+	<select name="inputTipo" id="inputTipo" required>
 		<?php
-		$sqlChip = "SELECT * FROM relatorios_chips ORDER BY id";
-		$resChip = sqlsrv_query($sqlChip, $con);
-		$numChip = sqlsrv_num_rows($resChip);
+		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 1 ORDER BY id";
+		$resTipo = sqlsrv_query($con, $sqlTipo);
 
-		for($x = 0; $x < $numChip; $x++) {
+		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
+		<option <?php if($rowTipo['id'] == $rowEquipamento['tipo']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
+		<?php } ?>
+	</select><span>*</span>
 
-			$rowChip = sqlsrv_fetch_array($resChip);
-		?>		
-		<option <?php if($rowAparelho['id_chip'] == $rowChip['id']) echo "selected"; ?> value="<?=$rowChip['id']?>"><?="Chip ".$rowChip['id']." - ".$rowChip['numero']?></option>
+	<select name="inputMarca" id="inputMarca">
+		<option value="0" <?php if($rowEquipamento['marca'] == 0) echo "selected"; ?>>Sem Marca</option>
+		<?php
+		$sqlMarca = "SELECT * FROM relatorios_marcas ORDER BY id";
+		$resMarca = sqlsrv_query($con, $sqlMarca);
+
+		while($rowMarca = sqlsrv_fetch_array($resMarca)) { ?>		
+		<option value="<?=$rowMarca['id']?>" <?php if($rowEquipamento['marca'] == $rowMarca['id']) echo "selected"; ?>><?=$rowMarca['nome']?></option>
 		<?php } ?>
 	</select>
 
-	<textarea placeholder="Problema" type="text" name="inputProblema" id="inputProblema"><?=$rowAparelho['problema']?></textarea>
+	<input value="<?=$rowEquipamento['modelo']?>" placeholder="Modelo" type="text" name="inputModelo" id="inputModelo">
+	<input value="<?=$rowEquipamento['patrimonio']?>" placeholder="Patrimônio" type="text" name="inputPatrimonio" id="inputPatrimonio" required><span>*</span>
+	<input value="<?=$rowEquipamento['tag']?>" placeholder="TAG" type="text" name="inputTag" id="inputTag">
 
-	<input type="submit" name="enviar" value="Salvar">
+
+	<select name="inputFornecedor" id="inputFornecedor">
+		<option value="0" <?php if($rowEquipamento['fornecedor'] == 0) echo "selected"; ?>>Sem Fornecedor</option>
+		<?php
+		$sqlFornecedor = "SELECT * FROM relatorios_fornecedores ORDER BY id";
+		$resFornecedor = sqlsrv_query($con, $sqlFornecedor);
+
+		while($rowFornecedor = sqlsrv_fetch_array($resFornecedor)) { ?>		
+		<option value="<?=$rowFornecedor['id']?>" <?php if($rowEquipamento['fornecedor'] == $rowFornecedor['id']) echo "selected"; ?>><?=$rowFornecedor['nome']?></option>
+		<?php } ?>
+	</select>
+
+	<input value="<?=$rowEquipamento['cnpj']?>" placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj">
+
+	<?php if(isset($rowEquipamento['link'])) { ?><a id="linkNotaFiscal" href="<?=$rowEquipamento['link']?>" target="_blank">Veja a Nota Atual</a><?php } ?>	
+	<p>Enviar nova Nota Fiscal</p>
+	<input type="file" name="inputNotaFiscal" id="inputNotaFiscal">
+	<input value="<?=$rowEquipamento['data_nf']->format('d/m/Y')?>" name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$">
+
+	<textarea placeholder="Observacao" type="text" name="inputObservacao" id="inputObservacao"><?=$rowEquipamento['observacao']?></textarea>
+	<input <?php if($rowEquipamento['disponivel'] == 1) echo "checked"; ?> type="checkbox" name="inputDisponivel" value="1"> Disponível
+
+	
+
+	<input type="submit" name="enviar" >
 
 	</form>
 </section>
 
 
+<script type="text/javascript" language="javascript">
+    $(function() {
+
+        $("#botaoVoltar").click(function() {
+
+        	var ultimo = <?=$tipoAtual?>;
+
+            $("#equipamentoDinamico").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
+
+            // Faz requisição ajax e envia o ID da Categoria via método POST
+            $.post("dinamicos/equipamentos.php", {ultimo: ultimo}, function(resposta) {
+
+               // Coloca a resposta na DIV
+               $("#equipamentoDinamico").html(resposta);
+           
+            });
+        });
+    });
+</script>

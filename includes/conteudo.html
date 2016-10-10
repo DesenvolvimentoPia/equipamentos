@@ -3,6 +3,7 @@
 // Arquivo de Corpo
 
 include "./conexao.php";
+include "./actions/create.php";
 
 ?>
 
@@ -32,8 +33,9 @@ $(function(){
 
 	<nav>
 		<a href="#home" class="acao selecionado">Home</a>
-		<a href="#notebooks" class="acao">Notebooks</a>
-		<a href="#impressoras" class="acao">Impressoras</a>
+		<a href="#equipamentos" class="acao">Equipamentos</a>
+		<a href="#licensas" class="acao">Licensas</a>
+		<a href="#listas" class="acao">Listas Suspensas</a>
 		<a href="#movimentos" class="acao">Movimentos</a>
 		<a href="#historico" class="acao">Histórico</a>
 		<a href="./logout.php">Logout</a>
@@ -47,12 +49,16 @@ $(function(){
 	<?php include "sections/home.tpl"; ?>
 </section>
 
-<section id="impressoras" ng-app="appImpressoras" ng-controller="myCtrlImpressoras">
-	<?php include "sections/impressoras.tpl"; ?>
+<section id="equipamentos" ng-app="appEquipamentos" ng-controller="myCtrlEquipamentos">
+	<?php include "sections/equipamentos.tpl"; ?>
 </section>
 
-<section id="notebooks" ng-app="appNotebooks" ng-controller="myCtrlNotebooks">
-	<?php include "sections/notebooks.tpl"; ?>
+<section id="licensas" ng-app="appLicensas" ng-controller="myCtrlLicensas">
+	<?php include "sections/licensas.tpl"; ?>
+</section>
+
+<section id="listas" ng-app="appListas" ng-controller="myCtrlListas">
+	<?php include "sections/listas.tpl"; ?>
 </section>
 
 <section id="movimentos" ng-app="appMovimentos" ng-controller="myCtrlMovimentos">

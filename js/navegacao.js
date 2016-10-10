@@ -15,6 +15,7 @@ $(document).ready(function() {
 		$('section').hide(); // Esconde Páginas
 		$('.aparelho').fadeIn(700); // Exibe Página Selecionada
 		$('#'+exibir[1]).fadeIn(700); // Exibe Página Selecionada
+		$('html, body').animate({ scrollTop: 0 }, 500);
 	});
 
 

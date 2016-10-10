@@ -1,17 +1,22 @@
 <?php
+
 // Arquivo de Corpo
 
 include "./conexao.php";
 
+$sqlLicensa = "SELECT * FROM relatorios_equipamentos WHERE id=".$_GET['id'];
+$resLicensa = sqlsrv_query($con, $sqlLicensa);
+$rowLicensa = sqlsrv_fetch_array($resLicensa);
+
 ?>
 
+
 <section class="aparelho">
-	<h2>Adicionar Equipamento</h2>
+	<h2>Editar Licensa - <?=$rowLicensa['id']?></h2>
 
-	<form id="editarEquipamento" action="./" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="hiddenCreate" value="true">
-
-	<input type="hidden" name="hiddenNovoEquipamento" value="true">
+	<form id="editarLicensa" action="./" method="post">
+	<input type="hidden" name="hiddenUpdate" value="true">
+	<input type="hidden" name="hiddenLicensa" value="<?=$rowLicensa['id']?>">
 
 	<select name="inputTipo" id="inputTipo" required>
 		<?php

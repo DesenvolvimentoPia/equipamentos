@@ -6,16 +6,16 @@ include "./conexao.php";
 ?>
 
 <section class="aparelho">
-	<h2>Adicionar Equipamento</h2>
+	<h2>Adicionar Licensa</h2>
 
-	<form id="editarEquipamento" action="./" method="post" enctype="multipart/form-data">
+	<form id="editarLicensa" action="./" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="hiddenCreate" value="true">
 
-	<input type="hidden" name="hiddenNovoEquipamento" value="true">
+	<input type="hidden" name="hiddenNovoLicensa" value="true">
 
 	<select name="inputTipo" id="inputTipo" required>
 		<?php
-		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 1 ORDER BY id";
+		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 2 ORDER BY id";
 		$resTipo = sqlsrv_query($con, $sqlTipo);
 
 		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
