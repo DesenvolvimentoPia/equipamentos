@@ -4,7 +4,7 @@
 
 include "./conexao.php";
 
-$sqlLicensa = "SELECT * FROM relatorios_equipamentos WHERE id=".$_GET['id'];
+$sqlLicensa = "SELECT * FROM relatorios_licensas WHERE id=".$_GET['id'];
 $resLicensa = sqlsrv_query($con, $sqlLicensa);
 $rowLicensa = sqlsrv_fetch_array($resLicensa);
 
@@ -20,52 +20,64 @@ $rowLicensa = sqlsrv_fetch_array($resLicensa);
 
 	<select name="inputTipo" id="inputTipo" required>
 		<?php
-		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 1 ORDER BY id";
+		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 2 ORDER BY id";
 		$resTipo = sqlsrv_query($con, $sqlTipo);
 
 		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
-		<option <?php if($rowTipo['nome'] == $_SESSION['tipoAtual']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
+		<option <?php if($rowTipo['nome'] == $rowLicensa['tipo']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
 		<?php } ?>
 	</select><span>*</span>
 
-	<select name="inputMarca" id="inputMarca">
-		<option value="0" selected>Sem Marca</option>
-		<?php
-		$sqlMarca = "SELECT * FROM relatorios_marcas ORDER BY id";
-		$resMarca = sqlsrv_query($con, $sqlMarca);
 
-		while($rowMarca = sqlsrv_fetch_array($resMarca)) { ?>		
-		<option value="<?=$rowMarca['id']?>"><?=$rowMarca['nome']?></option>
+	<select name="inputTipoLicensa" id="inputTipoLicensa" required>
+		<option value="">Tipo de Licensa</option>
+		<?php
+		$sqlTipoLicensa = "SELECT * FROM relatorios_listas WHERE tipo = 20 ORDER BY id";
+		$resTipoLicensa = sqlsrv_query($con, $sqlTipoLicensa);
+
+		while($rowTipoLicensa = sqlsrv_fetch_array($resTipoLicensa)) { ?>		
+		<option <?php if($rowLicensa['tipoLicensa'] == $rowTipoLicensa['id']) echo "selected"; ?> value="<?=$rowTipoLicensa['id']?>"><?=$rowTipoLicensa['nome']?></option>
+		<?php } ?>
+	</select><span>*</span>
+
+	<textarea placeholder="Descrição" type="text" name="inputDescricao" id="inputDescricao"><?=$rowLicensa['descricao']?></textarea>
+
+	<select name="inputFabricante" id="inputFabricante">
+		<option value="" <?php if($rowLicensa['fabricante'] == 0) echo "selected"; ?>>Sem Fabricante</option>
+		<?php
+		$sqlFabricante = "SELECT * FROM relatorios_listas WHERE tipo = 18 ORDER BY id";
+		$resFabricante = sqlsrv_query($con, $sqlFabricante);
+
+		while($rowFabricante = sqlsrv_fetch_array($resFabricante)) { ?>		
+		<option <?php if($rowLicensa['fabricante'] == $rowFabricante['id']) echo "selected"; ?> value="<?=$rowFabricante['id']?>"><?=$rowFabricante['nome']?></option>
 		<?php } ?>
 	</select>
 
-	<input placeholder="Modelo" type="text" name="inputModelo" id="inputModelo">
-	<input placeholder="Patrimônio" type="text" name="inputPatrimonio" id="inputPatrimonio" required><span>*</span>
-	<input placeholder="TAG" type="text" name="inputTag" id="inputTag">
 
 
 	<select name="inputFornecedor" id="inputFornecedor">
-		<option value="0" selected>Sem Fornecedor</option>
+		<option value="0" <?php if($rowLicensa['fornecedor'] == 0) echo "selected"; ?>>Sem Fornecedor</option>
 		<?php
-		$sqlFornecedor = "SELECT * FROM relatorios_fornecedores ORDER BY id";
+		$sqlFornecedor = "SELECT * FROM relatorios_listas WHERE tipo = 17 ORDER BY id";
 		$resFornecedor = sqlsrv_query($con, $sqlFornecedor);
 
 		while($rowFornecedor = sqlsrv_fetch_array($resFornecedor)) { ?>		
-		<option value="<?=$rowFornecedor['id']?>"><?=$rowFornecedor['nome']?></option>
+		<option <?php if($rowLicensa['fornecedor'] == $rowFornecedor['id']) echo "selected"; ?> value="<?=$rowFornecedor['id']?>"><?=$rowFornecedor['nome']?></option>
 		<?php } ?>
 	</select>
 
-	<input placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj">
+	<input value="<?=$rowLicensa['cnpj']?>" placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj">
+	<input value="<?=$rowLicensa['chave']?>" placeholder="Chave da Licensa" type="text" name="inputChave" id="inputChave">
 
+	<input type="hidden" name="inputNotaAtual" id="inputNotaAtual" value="<?=$rowLicensa['link']?>">
+	<?php if(isset($rowLicensa['link']) && $rowLicensa['link'] != "notas/") { ?><a id="linkNotaFiscal" href="<?=$rowLicensa['link']?>" target="_blank">Veja a Nota Atual</a><?php } ?>	
 	<p>Enviar Nota Fiscal</p>
 	<input type="file" name="inputNotaFiscal" id="inputNotaFiscal">
-	<input name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$">
+	<input value="<?=$rowLicensa['nota_fiscal']?>" placeholder="N° Nota Fiscal" type="text" name="inputNumeroNota" id="inputNumeroNota">
+	<input value="<?=$rowLicensa['data_nf']->format('d/m/Y')?>" name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$">
 
-	<textarea placeholder="Observacao" type="text" name="inputObservacao" id="inputObservacao"></textarea>
-	<input checked type="checkbox" name="inputDisponivel" value="1"> Disponível
-
-	
-
+	<textarea placeholder="Observação" type="text" name="inputObservacao" id="inputObservacao"><?=$rowLicensa['observacoes']?></textarea>
+	<input type="checkbox" name="inputDisponivel" <?php if($rowLicensa['disponivel'] == 1) echo "checked"; ?> value="1"> Disponível
 	<input type="submit" name="enviar" >
 
 	</form>

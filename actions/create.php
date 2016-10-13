@@ -4,6 +4,14 @@ include "conexao.php";
 
 if(!empty($_POST['hiddenCreate'])) {
 
+		$chaves = array_keys($_POST);
+		for($x = 0; $x < count($chaves); $x++){
+			$chave = $chaves[$x];
+			$_POST[$chave] = htmlspecialchars($_POST[$chave], ENT_QUOTES, 'UTF-8');
+			$_POST[$chave] = str_replace('"', "&quot;", $_POST[$chave]);
+			$_POST[$chave] = str_replace("'", "&#039;", $_POST[$chave]);
+		}
+
 
 	if(!empty($_POST['hiddenNovoEquipamento'])) {
 
@@ -13,34 +21,82 @@ if(!empty($_POST['hiddenCreate'])) {
 
 		$pasta = "notas/";
 
-		if(isset($_FILES['inputNotaFiscal'])) {
-			$notaFiscal = $pasta . basename($_FILES['inputNotaFiscal']['name']);
+		if(isset($_FILES['inputNotaFiscal']['name'])) {
+			$notaFiscal = $pasta ."-".$_POST['inputNumeroNota']. basename($_FILES['inputNotaFiscal']['name']);
 			move_uploaded_file($_FILES['inputNotaFiscal']['tmp_name'], $notaFiscal);
 		}
+
+		$_POST['inputModelo'] = str_replace("'", '"', $_POST['inputModelo']);
 
 		if(isset($_POST['inputDisponivel']) && $_POST['inputDisponivel'] == 1) $disponivel = 1;
 		else $disponivel = 0;
 
-			$sql = "INSERT INTO relatorios_equipamentos (tipo
-      ,patrimonio
-      ,marca
-      ,modelo
-      ,tag
-      ,nota_fiscal
-      ,fornecedor
-      ,cnpj
-      ,data_nf
-      ,link
-      ,observacao
-      ,disponivel) VALUES ('".$_POST['inputTipo']."', '".$_POST['inputPatrimonio']."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$_POST['inputTag']."', '0', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."')";
+			$sql = "INSERT INTO relatorios_equipamentos (tipo, patrimonio, marca, modelo, tag, nota_fiscal, fornecedor, cnpj, data_nf, link, observacao, disponivel, garantia, status) VALUES ('".$_POST['inputTipo']."', '".$_POST['inputPatrimonio']."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$_POST['inputTag']."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$_POST['inputGarantia']."','".$_POST['inputStatus']."')";
 			$res = sqlsrv_query($con, $sql);		
-			$resultado = "Equipamento Inserido com Sucesso!";		
+			$resultado = "Equipamento Inserido com Sucesso!";	
 
-			$sql1 = "INSERT INTO relatorios_historico VALUES ('', 'Equipamento Inseridoa', '".date("Y-m-d H:i:s")."', 'O Equipamento foi Inserido com Sucesso!', '".$_SESSION['userId']."', '3')";
+			$lastRes = sqlsrv_query($con, "SELECT SCOPE_IDENTITY()");
+			$lastId = sqlsrv_fetch_array($lastRes)[0];
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento foi Inserido com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
 			$res1= sqlsrv_query($con, $sql1);
 
 			//echo $sql;
 
 	}
 
-}
+
+	if(!empty($_POST['hiddenNovoLista'])) {
+
+		if($_POST['inputTipo'] == 15) {
+			$sql = "INSERT INTO relatorios_tipos (nome, tipo) VALUES ('".$_POST['inputNome']."', '".$_POST['inputTipoCategoria']."')";
+		}
+
+		else {
+			$sql = "INSERT INTO relatorios_listas (nome, tipo) VALUES ('".$_POST['inputNome']."', '".$_POST['inputTipo']."')";
+		}
+
+		$res = sqlsrv_query($con, $sql);	
+
+			$resultado = "Item de Lista Suspensa Inserido com Sucesso!";	
+
+			$lastRes = sqlsrv_query($con, "SELECT SCOPE_IDENTITY()");
+			$lastId = sqlsrv_fetch_array($lastRes)[0];	
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Item de Lista Suspensa Inserido', '".date("Y-m-d H:i:s")."', 'O Item de Lista Suspensa foi Inserido com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
+			$res1= sqlsrv_query($con, $sql1);
+
+			//echo $sql;
+
+	}
+
+	if(!empty($_POST['hiddenNovoLicensa'])) {
+
+
+		$cortar = explode("/", $_POST['inputDataNotaFiscal']);
+		$dataNota = $cortar[2]."-".$cortar[1]."-".$cortar[0];
+
+		$pasta = "notas/";
+
+		if(isset($_FILES['inputNotaFiscal']['name'])) {
+			$notaFiscal = $pasta ."-".$_POST['inputNumeroNota']. basename($_FILES['inputNotaFiscal']['name']);
+			move_uploaded_file($_FILES['inputNotaFiscal']['tmp_name'], $notaFiscal);
+		}
+
+		if(isset($_POST['inputDisponivel']) && $_POST['inputDisponivel'] == 1) $disponivel = 1;
+		else $disponivel = 0;
+
+			$sql = "INSERT INTO relatorios_licensas (tipo, tipoLicensa, chave, descricao, fabricante, nota_fiscal, fornecedor, cnpj, data_nf, observacoes, disponivel, link) VALUES ('".$_POST['inputTipo']."', '".$_POST['inputTipoLicensa']."', '".$_POST['inputChave']."', '".$_POST['inputDescricao']."', '".$_POST['inputFabricante']."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$notaFiscal."')";
+			$res = sqlsrv_query($con, $sql);		
+			$resultado = "Licensa Inserido com Sucesso!";	
+
+			$lastRes = sqlsrv_query($con, "SELECT SCOPE_IDENTITY()");
+			$lastId = sqlsrv_fetch_array($lastRes)[0];
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Licença Inserida', '".date("Y-m-d H:i:s")."', 'A Licença foi Inserida com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
+			$res1= sqlsrv_query($con, $sql1);
+
+			//echo $sql;
+       
+       }
+   }

@@ -23,26 +23,37 @@ include "./conexao.php";
 		<?php } ?>
 	</select><span>*</span>
 
-	<select name="inputMarca" id="inputMarca">
-		<option value="0" selected>Sem Marca</option>
-		<?php
-		$sqlMarca = "SELECT * FROM relatorios_marcas ORDER BY id";
-		$resMarca = sqlsrv_query($con, $sqlMarca);
 
-		while($rowMarca = sqlsrv_fetch_array($resMarca)) { ?>		
-		<option value="<?=$rowMarca['id']?>"><?=$rowMarca['nome']?></option>
+	<select name="inputTipoLicensa" id="inputTipoLicensa" required>
+		<option value="" selected>Tipo de Licensa</option>
+		<?php
+		$sqlTipoLicensa = "SELECT * FROM relatorios_listas WHERE tipo = 20 ORDER BY id";
+		$resTipoLicensa = sqlsrv_query($con, $sqlTipoLicensa);
+
+		while($rowTipoLicensa = sqlsrv_fetch_array($resTipoLicensa)) { ?>		
+		<option value="<?=$rowTipoLicensa['id']?>"><?=$rowTipoLicensa['nome']?></option>
+		<?php } ?>
+	</select><span>*</span>
+
+	<textarea placeholder="Descrição" type="text" name="inputDescricao" id="inputDescricao"></textarea>
+
+	<select name="inputFabricante" id="inputFabricante">
+		<option value="" selected>Sem Fabricante</option>
+		<?php
+		$sqlFabricante = "SELECT * FROM relatorios_listas WHERE tipo = 18 ORDER BY id";
+		$resFabricante = sqlsrv_query($con, $sqlFabricante);
+
+		while($rowFabricante = sqlsrv_fetch_array($resFabricante)) { ?>		
+		<option value="<?=$rowFabricante['id']?>"><?=$rowFabricante['nome']?></option>
 		<?php } ?>
 	</select>
 
-	<input placeholder="Modelo" type="text" name="inputModelo" id="inputModelo">
-	<input placeholder="Patrimônio" type="text" name="inputPatrimonio" id="inputPatrimonio" required><span>*</span>
-	<input placeholder="TAG" type="text" name="inputTag" id="inputTag">
 
 
 	<select name="inputFornecedor" id="inputFornecedor">
 		<option value="0" selected>Sem Fornecedor</option>
 		<?php
-		$sqlFornecedor = "SELECT * FROM relatorios_fornecedores ORDER BY id";
+		$sqlFornecedor = "SELECT * FROM relatorios_listas WHERE tipo = 17 ORDER BY id";
 		$resFornecedor = sqlsrv_query($con, $sqlFornecedor);
 
 		while($rowFornecedor = sqlsrv_fetch_array($resFornecedor)) { ?>		
@@ -51,12 +62,14 @@ include "./conexao.php";
 	</select>
 
 	<input placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj">
+	<input placeholder="Chave da Licensa" type="text" name="inputChave" id="inputChave">
 
 	<p>Enviar Nota Fiscal</p>
 	<input type="file" name="inputNotaFiscal" id="inputNotaFiscal">
+	<input placeholder="N° Nota Fiscal" type="text" name="inputNumeroNota" id="inputNumeroNota">
 	<input name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$">
 
-	<textarea placeholder="Observacao" type="text" name="inputObservacao" id="inputObservacao"></textarea>
+	<textarea placeholder="Observação" type="text" name="inputObservacao" id="inputObservacao"></textarea>
 	<input checked type="checkbox" name="inputDisponivel" value="1"> Disponível
 
 	
@@ -74,13 +87,13 @@ include "./conexao.php";
 
         	var ultimo = <?=$tipoAtual?>;
 
-            $("#equipamentoDinamico").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
+            $("#licensaDinamico").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
 
             // Faz requisição ajax e envia o ID da Categoria via método POST
-            $.post("dinamicos/equipamentos.php", {ultimo: ultimo}, function(resposta) {
+            $.post("dinamicos/licensas.php", {ultimo: ultimo}, function(resposta) {
 
                // Coloca a resposta na DIV
-               $("#equipamentoDinamico").html(resposta);
+               $("#licensaDinamico").html(resposta);
            
             });
         });

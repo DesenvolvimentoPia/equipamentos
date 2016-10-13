@@ -1,4 +1,4 @@
-<h1>LICENSAS</h1>
+<h1>LICENÇAS</h1>
 
 
 <?php 

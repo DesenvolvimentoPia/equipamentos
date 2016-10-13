@@ -4,6 +4,7 @@
 
 include "./conexao.php";
 include "./actions/create.php";
+include "./actions/update.php";
 
 ?>
 
@@ -34,9 +35,9 @@ $(function(){
 	<nav>
 		<a href="#home" class="acao selecionado">Home</a>
 		<a href="#equipamentos" class="acao">Equipamentos</a>
-		<a href="#licensas" class="acao">Licensas</a>
+		<?php if($_SESSION['acesso'] == 9) { ?><a href="#licensas" class="acao">Licenças</a><?php } ?>
 		<a href="#listas" class="acao">Listas Suspensas</a>
-		<a href="#movimentos" class="acao">Movimentos</a>
+		<?php if($_SESSION['acesso'] == 9) { ?><a href="#movimentos" class="acao">Movimentos</a><?php } ?>
 		<a href="#historico" class="acao">Histórico</a>
 		<a href="./logout.php">Logout</a>
 	</nav>

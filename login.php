@@ -2,6 +2,10 @@
 
 session_start();
 
+?>
+<meta charset="UTF-8">
+<?php
+
 date_default_timezone_set('America/Sao_Paulo');
 
 // Exibir Erros Oriundos do PHP
@@ -18,11 +22,11 @@ $db_database = 'integracoes';
 $db_user = 'soa';
 $db_passwd = 'Fr@m3work';
 
-$connectionInfo = array("Database"=>$db_database, "UID"=>$db_user, "PWD"=>$db_passwd);
+$connectionInfo = array("Database"=>$db_database, "UID"=>$db_user, "PWD"=>$db_passwd, "CharacterSet" => "UTF-8");
 $con = sqlsrv_connect($db_server, $connectionInfo);
 
 if(!empty($_POST)) {
-	$sql = "SELECT * FROM relatorios_usuarios WHERE login LIKE '".$_POST['usuario']."' AND senha LIKE '".$_POST['senha']."'";
+	$sql = "SELECT * FROM relatorios_usuarios WHERE login LIKE '".$_POST['usuario']."' AND senha LIKE '".$_POST['senha']."' COLLATE sql_latin1_general_cp1_cs_as";
 	$res = sqlsrv_query($con, $sql);
 	//echo $sql;
 	$num = sqlsrv_has_rows($res);

@@ -1,12 +1,16 @@
 <h2>Consultar Histórico</h2>
 
+    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
+
 	<div class="tituloResultados">
-		<a class="linkTitulo2 selecionado" ng-click="ordenar2('diaHora');">Dia e Hora</a><a  class="linkTitulo2" ng-click="ordenar2('evento');">Evento</a><a  class="linkTitulo2" ng-click="ordenar2('descricao');">Descrição</a><a  class="linkTitulo2" ng-click="ordenar2('usuario');">Usuário</a>
+		<a class="linkTitulo2 selecionado" ng-click="ordenar2('id');">Dia e Hora</a><a  class="linkTitulo2" ng-click="ordenar2('evento');">Evento</a><a  class="linkTitulo2" ng-click="ordenar2('descricao');">Descrição</a><a  class="linkTitulo2" ng-click="ordenar2('usuario');">Usuário</a>
 	</div>
 
-	<div class="linhaResultado" ng-repeat="y in records | orderBy:myOrderBy2">
+	<div class="linhaResultado" ng-repeat="y in records.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | orderBy:myOrderBy2">
 		<div class="colunaResultado2">{{y.diaHora}}</div><div class="colunaResultado2">{{y.evento}}</div><div class="colunaResultado2">{{y.descricao}}</div><div class="colunaResultado2">{{y.usuario}}</div>
 	</div>
+
+    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
 
 	<script>
 
@@ -23,27 +27,50 @@
 		});
 	});
 
-	var appHistorico = angular.module("appHistorico", [])
+	var appHistorico = angular.module("appHistorico", ['ui.bootstrap'])
 	.controller("myCtrlHistorico", function($scope) {
-    
+   
     $scope.records = [
 
 	<?php
 
-	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 7 OR sistema = 0 ORDER BY relatorios_historico.hora DESC";
+	$sql = "SELECT relatorios_historico.id, relatorios_historico.nome, hora, descricao, relatorios_usuarios.nome AS usuario FROM relatorios_historico LEFT JOIN relatorios_usuarios ON relatorios_historico.id_usuario = relatorios_usuarios.id  WHERE sistema = 7 OR sistema = 0 ORDER BY relatorios_historico.id DESC";
 	$res = sqlsrv_query($con, $sql);
+
+	//echo $sql;
 
 	$i = 0;
 	 while($row = sqlsrv_fetch_array($res)) {
 		if($i == 0) echo "{";
 		else echo ", {";
-		echo "'diaHora': '".$row['hora']->format('d/m/Y')."', 'evento': '".$row['nome']."', 'descricao': '".$row['descricao']."', 'usuario': '".$row['usuario']."' }";
+		echo "'diaHora': '".$row['hora']->format('d/m/Y')."', 'evento': '".$row['nome']."', 'id': '".$row['id']."', 'descricao': '".$row['descricao']."', 'usuario': '".$row['usuario']."' }";
 		$i++;
 	}
 	
 	?>
 
     ];
+
+      $scope.viewby = 50;
+	  $scope.totalItems = $scope.records.length;
+	  $scope.currentPage = 1;
+	  $scope.itemsPerPage = $scope.viewby;
+	  $scope.maxSize = 5; //Number of pager buttons to show
+
+	  $scope.setPage = function (pageNo) {
+	    $scope.currentPage = pageNo;
+	  };
+
+	  $scope.pageChanged = function() {
+	    console.log('Page changed to: ' + $scope.currentPage);
+	  };
+
+	  $scope.setItemsPerPage = function(num) {
+	  $scope.itemsPerPage = num;
+	  $scope.currentPage = 1; //reset to first paghe
+	}
+
+
       $scope.ordenar2 = function(y) {
       	if($scope.myOrderBy2 == y) y = "-"+y;
 	    $scope.myOrderBy2 = y;

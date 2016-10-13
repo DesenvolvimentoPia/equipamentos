@@ -28,7 +28,7 @@
 	</div>
 
 	<a class="linhaResultado7 {{x.tipo}}" ng-repeat="x in recordsEquipamentos | orderBy:myOrderBy | filter: filtro">
-		<div data-cod="{{x.id}}" class="colunaResultado colunaId">{{x.id}}</div><div class="colunaResultado">{{x.marca}}</div><div class="colunaResultado">{{x.modelo}}</div><div class="colunaResultado">{{x.fornecedor}}</div><div class="colunaResultado">{{x.patrimonio}}</div><div class="colunaResultado">{{x.tag}}</div><div class="colunaResultado"><span data-abrir="{{x.link}}" onclick="window.open(this.dataset.abrir, '_blank')">Ver Nota</span></div>
+		<div data-cod="{{x.id}}" class="colunaResultado colunaId status{{x.status}}" title="{{x.titulo}}">{{x.id}}<span class='editar'> - Editar</span></div><div class="colunaResultado">{{x.marca}}</div><div class="colunaResultado">{{x.modelo}}</div><div class="colunaResultado">{{x.fornecedor}}</div><div class="colunaResultado">{{x.patrimonio}}</div><div class="colunaResultado">{{x.tag}}</div><div class="colunaResultado"><span data-abrir="{{x.link}}" onclick="window.open(this.dataset.abrir, '_blank')">Ver Nota</span></div>
 	</a>
 
 	<div class="semResultados" ng-if="!recordsEquipamentos[0]">Nenhum Resultado.</div>
@@ -57,17 +57,21 @@
 
 	<?php
 
-	$sql = "SELECT relatorios_equipamentos.*, relatorios_marcas.nome AS nomeMarca, relatorios_fornecedores.nome AS nomeFornecedor FROM relatorios_equipamentos LEFT JOIN relatorios_marcas ON relatorios_equipamentos.marca = relatorios_marcas.id LEFT JOIN relatorios_fornecedores ON relatorios_equipamentos.fornecedor = relatorios_fornecedores.id WHERE disponivel = '1' AND tipo = '".$_POST['ultimo']."' ORDER BY id DESC";
+	$sql = "SELECT relatorios_equipamentos.*, a.nome AS nomeMarca, b.nome AS nomeFornecedor FROM relatorios_equipamentos LEFT JOIN relatorios_listas a ON relatorios_equipamentos.marca = a.id AND a.tipo = 18 LEFT JOIN relatorios_listas b ON relatorios_equipamentos.fornecedor = b.id AND b.tipo = 17 WHERE relatorios_equipamentos.disponivel = '1' AND relatorios_equipamentos.tipo = '".$_POST['ultimo']."' ORDER BY relatorios_equipamentos.id DESC";
 	$res = sqlsrv_query($con, $sql);
 
-	//print_r($res);
+	//echo $sql;
 
 	$i = 0;
 	 while($row = sqlsrv_fetch_array($res, SQLSRV_FETCH_ASSOC)) {
 
+	if($row['status'] == 2) $titulo = "Entregue";
+	else if($row['status'] == 1) $titulo = "Almox";
+	else $titulo = "Baixa";
+
 		if($i == 0) echo "{";
 		else echo ", {";
-		echo "'id': ".$row['id'].", 'marca': '".$row['nomeMarca']."', 'modelo': '".$row['modelo']."', 'tipo': '".$row['tipo']."', 'fornecedor': '".$row['nomeFornecedor']."', 'patrimonio': '".$row['patrimonio']."', 'tag': '".$row['tag']."', 'link': '".$row['link']."', 'data_nf': '".$row['data_nf']->format('d/m/Y')."' }";
+		echo "'id': ".$row['id'].", 'marca': '".$row['nomeMarca']."', 'modelo': '".$row['modelo']."', 'tipo': '".$row['tipo']."', 'fornecedor': '".$row['nomeFornecedor']."', 'patrimonio': '".$row['patrimonio']."', 'cnpj': '".$row['cnpj']."', 'status': '".$row['status']."', 'titulo': '".$titulo."', 'tag': '".$row['tag']."', 'link': '".$row['link']."', 'data_nf': '".$row['data_nf']->format('d/m/Y')."' }";
 
 		$i++;
 	}
