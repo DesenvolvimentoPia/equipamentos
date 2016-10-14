@@ -3,15 +3,20 @@
 
 include "./conexao.php";
 
+if($_GET['tipo'] != "Categorias") $sqlItem = "SELECT * FROM relatorios_listas WHERE id = ".$_GET['id'];
+else $sqlItem = "SELECT * FROM relatorios_tipos WHERE id = ".$_GET['id'];
+$resItem = sqlsrv_query($con, $sqlItem);
+$rowItem = sqlsrv_fetch_array($resItem);
+
 ?>
 
 <section class="aparelho">
-	<h2>Adicionar Item à Lista - <?=$_GET['tipo'];?></h2>
+	<h2>Editar Item - <?=$rowItem['nome'];?></h2>
 
 	<form id="editarLista" action="./" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="hiddenCreate" value="true">
+	<input type="hidden" name="hiddenUpdate" value="true">
 
-	<input type="hidden" name="hiddenNovoLista" value="true">
+	<input type="hidden" name="hiddenLista" value="<?=$rowItem['id']?>">
 
 	<select style="display: none" name="inputTipo" id="inputTipo" required>
 		<?php
@@ -19,17 +24,17 @@ include "./conexao.php";
 		$resTipo = sqlsrv_query($con, $sqlTipo);
 
 		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
-		<option <?php if($rowTipo['nome'] == $_GET['tipo']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
+		<option <?php if($rowTipo['nome'] == $_SESSION['tipoAtual']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
 		<?php } ?>
 	</select>
 
-	<input placeholder="Nome do Item" type="text" name="inputNome" id="inputNome" required><span>*</span>
+	<input value="<?=$rowItem['nome']?>" placeholder="Nome do Item" type="text" name="inputNome" id="inputNome" required><span>*</span>
 
 	<?php if($_GET['tipo'] == "Categorias") { ?> 
 
 	<select name="inputTipoCategoria" id="inputTipoCategoria" required>	
-		<option value="1" selected>Equipamento</option>
-		<option value="2">Licença</option>
+		<option value="1" <?php if($rowItem['tipo'] == 1) echo "selected";?>>Equipamento</option>
+		<option value="2" <?php if($rowItem['tipo'] == 2) echo "selected";?>>Licença</option>
 	</select><span>*</span>
 
 	<?php } ?>

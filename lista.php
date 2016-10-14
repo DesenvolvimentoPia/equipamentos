@@ -13,7 +13,7 @@ else {
 
 	//echo "AQUI: ".$_GET['tipo'];
 
-if(!empty($_GET['tipo'])) $_SESSION['tipoAtual'] = $_GET['tipo'];
+//if(!empty($_GET['tipo'])) $_SESSION['tipoAtual'] = $_GET['tipo'];
 
 // Incluindo Cabeçalho Padrão
 if($_GET['id'] == 'novo') include "includes/novoLista.html";

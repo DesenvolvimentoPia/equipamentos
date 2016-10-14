@@ -91,7 +91,7 @@ $(function () {
 		//$('#listaDinamico').html('Carregando...');
 		// Do an ajax request
 		$.ajax({
-		  url: "lista.php?id="+id
+		  url: "lista.php?id="+id+"&tipo=<?=$tipo?>"
 		}).done(function(data) { // data what is sent back by the php page
 		  $('#listaDinamico').html(data); // display data
 		});

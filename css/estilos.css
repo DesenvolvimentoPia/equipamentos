@@ -156,6 +156,10 @@ nav a:hover {
     border-bottom: 5px #525252 solid;
 }
 
+section#home {
+    padding-bottom: 52px;
+}
+
 section {
 	background: #FFF;
 	width: 100%;
@@ -821,12 +825,24 @@ a#linkNotaFiscal:hover {
     background: transparent;
 }
 
+h3 {
+    background: #999;
+    color: #FFF;
+    font-weight: normal;
+    padding: 16px 0;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 18px;
+}
 
-
-
-
-
-
+.holderCanvas {
+    display: inline-block;
+    background: #F1F1F1;
+    padding-bottom: 16px; 
+    width: 48%; 
+    margin: 25px 0.5% -7px;
+    vertical-align: top;
+}
 
 .pagination {
     display: block;
@@ -913,4 +929,88 @@ a#linkNotaFiscal:hover {
 .pagination-sm > li:last-child > span {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
+}
+
+
+
+
+.divHome {
+    background: #888;
+    display: inline-block;
+    width: 17%;
+    margin: 10px 0.3% -7px;
+    color: #FFF;
+    padding: 1%;
+    vertical-align: top;
+    opacity: .52;
+    transition: all 0.43s;
+    -o-transition: all 0.43s;
+    -moz-transition: all 0.43s;
+    -webkit-transition: all 0.43s;
+}
+
+
+.divHome:hover {
+    opacity: .8;
+}
+
+.divHome:nth-child(5) {
+    opacity: .88;
+}
+
+.divHome:nth-child(5):hover {
+    opacity: 1;
+}
+
+.tituloHome {
+    font-size: 20px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #999, -1px -1px 1px #777;
+    border-bottom: 1px solid #AAA;
+    padding-bottom: 12px;
+}
+
+
+.totalHome {
+    text-align: right;
+    font-size: 70px;
+    font-family: 'champagne';
+    text-shadow: 1px 1px 1px #777;
+    border-top: 1px solid #777;
+    padding-top: 12px;
+}
+
+.tituloUltimosEquipamentos {
+    padding: 12px 0;
+    background: #525252;
+    color: #FFF;
+}
+
+
+
+
+
+
+.coluna {
+    display: inline-block;
+}
+
+
+.ultimosEquipamentos:nth-child(odd) {
+    background: #DDD;
+}
+
+.ultimosEquipamentos {
+    padding: 12px 0;
+}
+
+.coluna:nth-child(1) {
+    width: 16%;
+}
+
+.coluna:nth-child(2) {
+    width: 36%;
+}
+.coluna:nth-child(3) {
+    width: 48%;
 }

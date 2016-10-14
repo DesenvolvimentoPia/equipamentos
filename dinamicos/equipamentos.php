@@ -69,6 +69,9 @@
 	else if($row['status'] == 1) $titulo = "Almox";
 	else $titulo = "Baixa";
 
+	$row['modelo'] = str_replace('&quot;', '"', $row['modelo']);
+	$row['modelo'] = str_replace('&#039;', '"', $row['modelo']);
+
 		if($i == 0) echo "{";
 		else echo ", {";
 		echo "'id': ".$row['id'].", 'marca': '".$row['nomeMarca']."', 'modelo': '".$row['modelo']."', 'tipo': '".$row['tipo']."', 'fornecedor': '".$row['nomeFornecedor']."', 'patrimonio': '".$row['patrimonio']."', 'cnpj': '".$row['cnpj']."', 'status': '".$row['status']."', 'titulo': '".$titulo."', 'tag': '".$row['tag']."', 'link': '".$row['link']."', 'data_nf': '".$row['data_nf']->format('d/m/Y')."' }";

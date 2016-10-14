@@ -7,7 +7,6 @@ if(!empty($_POST['hiddenUpdate'])) {
 		$chaves = array_keys($_POST);
 		for($x = 0; $x < count($chaves); $x++){
 			$chave = $chaves[$x];
-			$_POST[$chave] = htmlspecialchars($_POST[$chave], ENT_QUOTES, 'UTF-8');
 			$_POST[$chave] = str_replace('"', "&quot;", $_POST[$chave]);
 			$_POST[$chave] = str_replace("'", "&#039;", $_POST[$chave]);
 		}
@@ -68,6 +67,28 @@ if(!empty($_POST['hiddenUpdate'])) {
 			$resultado = "Licensa alterada com Sucesso!";		
 
 			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Licença Alterada', '".date("Y-m-d H:i:s")."', 'A Licença ".$_POST['hiddenLicensa']." foi alterada com Sucesso!', '".$_SESSION['userId']."', '7', '".$_POST['hiddenLicensa']."')";
+			$res1= sqlsrv_query($con, $sql1);
+
+			//echo $sql;
+
+	}
+
+
+	if(!empty($_POST['hiddenLista'])) {
+
+		if($_POST['inputTipo'] == 15) {
+			$sql = "UPDATE relatorios_tipos SET nome = '".$_POST['inputNome']."', tipo = '".$_POST['inputTipoCategoria']."' WHERE id =".$_POST['hiddenLista'];
+		}
+
+		else {
+			$sql = "UPDATE relatorios_listas SET nome = '".$_POST['inputNome']."', tipo = '".$_POST['inputTipo']."' WHERE id = ".$_POST['hiddenLista'];
+		}
+
+		$res = sqlsrv_query($con, $sql);	
+
+			$resultado = "Item de Lista Suspensa Alterado com Sucesso!";	
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Item de Lista Suspensa Alterado', '".date("Y-m-d H:i:s")."', 'O Item de Lista Suspensa ".$_POST['hiddenLista']." foi Alterado com Sucesso!', '".$_SESSION['userId']."', '7', '".$_POST['hiddenLista']."')";
 			$res1= sqlsrv_query($con, $sql1);
 
 			//echo $sql;

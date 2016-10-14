@@ -7,7 +7,6 @@ if(!empty($_POST['hiddenCreate'])) {
 		$chaves = array_keys($_POST);
 		for($x = 0; $x < count($chaves); $x++){
 			$chave = $chaves[$x];
-			$_POST[$chave] = htmlspecialchars($_POST[$chave], ENT_QUOTES, 'UTF-8');
 			$_POST[$chave] = str_replace('"', "&quot;", $_POST[$chave]);
 			$_POST[$chave] = str_replace("'", "&#039;", $_POST[$chave]);
 		}
