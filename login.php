@@ -17,13 +17,7 @@ if(!empty($_SESSION['usuario'])) header("location: ./");
 
 else {
 
-$db_server = '10.1.10.130\Teste';
-$db_database = 'integracoes';
-$db_user = 'soa';
-$db_passwd = 'Fr@m3work';
-
-$connectionInfo = array("Database"=>$db_database, "UID"=>$db_user, "PWD"=>$db_passwd, "CharacterSet" => "UTF-8");
-$con = sqlsrv_connect($db_server, $connectionInfo);
+include "conexao.php";
 
 if(!empty($_POST)) {
 	$sql = "SELECT * FROM relatorios_usuarios WHERE login LIKE '".$_POST['usuario']."' AND senha LIKE '".$_POST['senha']."' COLLATE sql_latin1_general_cp1_cs_as";
