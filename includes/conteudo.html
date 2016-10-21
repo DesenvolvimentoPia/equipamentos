@@ -38,6 +38,7 @@ $(function(){
 		<?php if($_SESSION['acesso'] == 9) { ?><a href="#licensas" class="acao">Licenças</a><?php } ?>
 		<a href="#listas" class="acao">Listas Suspensas</a>
 		<?php if($_SESSION['acesso'] == 9) { ?><a href="#movimentos" class="acao">Movimentos</a><?php } ?>
+		<?php if($_SESSION['acesso'] == 2) { ?><a href="http://suporte.pia.com.br/relatorios/aprendizes/" target="_blank">Registro</a><?php } ?>
 		<a href="#historico" class="acao">Histórico</a>
 		<a href="./logout.php">Logout</a>
 	</nav>

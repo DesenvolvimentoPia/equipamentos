@@ -1,0 +1,72 @@
+<meta charset="utf-8">
+<style type="text/css">
+	p {
+		margin: 2px 0;
+	}
+
+	div {
+		font-family: calibri;
+		color: #333;
+		margin-bottom: 7px;
+		padding: 12px;
+	}
+
+	div:nth-child(odd){
+		background: #EEE;
+	}
+</style>
+
+<?php
+
+include "conexao.php";
+
+$opts = array('http' => array('header' => 'Accept-Charset: UTF-8, *;q=0'));
+$context = stream_context_create($opts);
+
+$arquivo = file_get_contents("relatorio.txt", false, $context);
+
+$explodir = explode("
+", $arquivo);
+
+for($i = 0; $i < count($explodir)-1; $i++) {
+	echo "<div>";
+	$resultado = explode("COOPERATIVA AGROPECUARIA PETROPOLIS LTDA", $explodir[$i]);
+	$unidade = substr($resultado[1], 0, 10);
+	$matricula = substr($resultado[1], 40, 10);
+	$nome = ucwords(strtolower(substr($resultado[1], 53, 43)));
+
+	$limpar = explode(" ", $nome);
+	$primeiro = 1;
+	for($x = 0; $x < count($limpar); $x++) {
+		if(!empty($limpar[$x])) {
+			if($primeiro == 1) {
+				$nome = $limpar[$x];
+				$primeiro = 0;
+			}
+
+			else $nome .= " ".$limpar[$x];
+		}
+	}
+
+	$custo = substr($resultado[1], 112, 12);
+	$lotacao = substr($resultado[1], 96, 7);
+	$data = substr($resultado[1], 173, 10);
+	$usuario = substr($resultado[1], 185, 15);
+	$nomeUsuario = substr($resultado[1], 200, 51);
+	$pessoa = str_replace(".", "", substr($resultado[1], 253));
+	echo "<p>Unidade: ".$unidade."</p>";
+	echo "<p>Matrícula: ".$matricula."</p>";
+	echo "<p>Nome: ".$nome."</p>";
+	echo "<p>Unidade Lotação: ".$lotacao."</p>";
+	echo "<p>Centro de Custo: ".$custo."</p>";
+	echo "<p>Data de Admissão: ".$data."</p>";
+	echo "<p>Usuário Datasul: ".$usuario."</p>";
+	echo "<p>Nome no Datasul: ".$nomeUsuario."</p>";
+	echo "<p>Pessoa Física: ".$pessoa."</p>";
+
+	$sql = "INSERT INTO relatorios_funcionarios (unidade, matricula, nome, lotacao, centroCusto, dataAdmissao, usuarioDatasul, nomeDatasul, pessoaFisica) VALUES ('".$unidade."', '".$matricula."', '".$nome."', '".$lotacao."', '".$custo."', '".$data."', '".$usuario."', '".$nomeUsuario."', '".$pessoa."')";
+	$res = sqlsrv_query($con, $sql);
+
+
+	echo "</div>";
+}

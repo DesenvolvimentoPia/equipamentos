@@ -17,6 +17,20 @@
 
 
 	?>
+
+	<?php if($_POST['ultimo'] == 19) { ?>
+	<style>
+
+	#listaDinamico a.linhaResultado7 div:nth-child(2), #listaDinamico div.tituloResultados a:nth-child(2) {
+	    width: 50%;
+	}
+
+	.tituloResultados a:nth-child(3), .linhaResultado7 .colunaResultado:nth-child(3) {
+	    width: 36%;
+	}
+
+	</style>
+	<?php } ?>
 	
 	<div id="angularListas" ng-app="appAngularListas" ng-controller="myCtrlAngularListas">
 	<h2 id="h2Listas">Lista Suspensa: <?=$tipo;?></h2>
@@ -24,11 +38,11 @@
 	<input placeholder="Pesquisa Rápida" name="pesquisarListas" id="pesquisarListas" type="text" ng-model="filtro"><a id="adicionarLista">Adicionar</a>
 
 	<div class="tituloResultados">
-	<a class="linkTitulo7 selecionado" ng-click="ordenar('id');">ID</a><a class="linkTitulo7" ng-click="ordenar('nome');">Nome do Item</a>
+	<a class="linkTitulo7 selecionado" ng-click="ordenar('id');">ID</a><a class="linkTitulo7" ng-click="ordenar('nome');">Nome do Item</a><?php if($_POST['ultimo'] == 19) { ?><a class="linkTitulo7" ng-click="ordenar('unidade');">Unidade</a><?php } ?>
 	</div>
 
 	<a class="linhaResultado7 {{x.tipo}}" ng-repeat="x in recordsListas | orderBy:myOrderBy | filter: filtro">
-		<div data-cod="{{x.id}}" class="colunaResultado colunaId">{{x.id}}</div><div class="colunaResultado">{{x.nome}}</div>
+		<div data-cod="{{x.id}}" class="colunaResultado colunaId">{{x.id}}</div><div class="colunaResultado">{{x.nome}}</div><?php if($_POST['ultimo'] == 19) { ?><div class="colunaResultado">{{x.unidade}}</div><?php } ?>
 	</a>
 
 	<div class="semResultados" ng-if="!recordsListas[0]">Nenhum Resultado.</div>
@@ -58,7 +72,13 @@
 	<?php
 
 	if($_POST['ultimo'] == "15") $sql = "SELECT * FROM relatorios_tipos WHERE tipo < 3 ORDER BY id DESC";
-	else $sql = "SELECT * FROM relatorios_listas WHERE tipo = '".$_POST['ultimo']."' ORDER BY id DESC";
+	else if($_POST['ultimo'] != "19") $sql = "SELECT * FROM relatorios_listas WHERE tipo = '".$_POST['ultimo']."' ORDER BY id DESC";
+	else $sql = "SELECT a.*, c.nome as unidade FROM relatorios_listas a 
+		LEFT JOIN relatorios_setores_unidades b ON
+		a.id = b.id_setor
+		LEFT JOIN relatorios_listas c ON
+		b.id_unidade = c.id
+	WHERE a.tipo = '".$_POST['ultimo']."' ORDER BY a.id DESC";
 	$res = sqlsrv_query($con, $sql);
 
 	//echo $sql; 
@@ -68,7 +88,7 @@
 
 		if($i == 0) echo "{";
 		else echo ", {";
-		echo "'id': ".$row['id'].", 'nome': '".$row['nome']."' }";
+		echo "'id': ".$row['id'].", 'nome': '".$row['nome']."', 'unidade': '".$row['unidade']."' }";
 
 		$i++;
 	}

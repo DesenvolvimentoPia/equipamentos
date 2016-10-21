@@ -1,4 +1,4 @@
-<h2>Consultar Histórico</h2>
+<h1>CONSULTAR HISTÓRICO</h1>
 
     <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
 

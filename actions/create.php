@@ -16,7 +16,8 @@ if(!empty($_POST['hiddenCreate'])) {
 
 
 		$cortar = explode("/", $_POST['inputDataNotaFiscal']);
-		$dataNota = $cortar[2]."-".$cortar[1]."-".$cortar[0];
+		if(isset($cortar['2'])) $dataNota = $cortar[2]."-".$cortar[1]."-".$cortar[0];
+		else $dataNota = "";
 
 		$pasta = "notas/";
 
@@ -30,7 +31,10 @@ if(!empty($_POST['hiddenCreate'])) {
 		if(isset($_POST['inputDisponivel']) && $_POST['inputDisponivel'] == 1) $disponivel = 1;
 		else $disponivel = 0;
 
-			$sql = "INSERT INTO relatorios_equipamentos (tipo, patrimonio, marca, modelo, tag, nota_fiscal, fornecedor, cnpj, data_nf, link, observacao, disponivel, garantia, status) VALUES ('".$_POST['inputTipo']."', '".$_POST['inputPatrimonio']."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$_POST['inputTag']."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$_POST['inputGarantia']."','".$_POST['inputStatus']."')";
+		$patrimonios = explode(";", $_POST['inputPatrimonio']);
+		for($i = 0; $i < count($patrimonios); $i++) {
+
+			$sql = "INSERT INTO relatorios_equipamentos (tipo, patrimonio, marca, modelo, tag, nota_fiscal, fornecedor, cnpj, data_nf, link, observacao, disponivel, garantia, status) VALUES ('".$_POST['inputTipo']."', '".$patrimonios[$i]."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$_POST['inputTag']."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$_POST['inputGarantia']."','".$_POST['inputStatus']."')";
 			$res = sqlsrv_query($con, $sql);		
 			$resultado = "Equipamento Inserido com Sucesso!";	
 
@@ -39,6 +43,8 @@ if(!empty($_POST['hiddenCreate'])) {
 
 			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento foi Inserido com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
 			$res1= sqlsrv_query($con, $sql1);
+
+		}
 
 			//echo $sql;
 
@@ -60,7 +66,13 @@ if(!empty($_POST['hiddenCreate'])) {
 			$resultado = "Item de Lista Suspensa Inserido com Sucesso!";	
 
 			$lastRes = sqlsrv_query($con, "SELECT SCOPE_IDENTITY()");
-			$lastId = sqlsrv_fetch_array($lastRes)[0];	
+			$lastId = sqlsrv_fetch_array($lastRes)[0];
+			
+
+		if(isset($_POST['inputUnidade'])) {
+			$sqlUnidade = "INSERT INTO relatorios_setores_unidades (id_setor, id_unidade) VALUES ('".$lastId."', '".$_POST['inputUnidade']."')";
+			$resUnidade = sqlsrv_query($con, $sqlUnidade);		
+		}	
 
 			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Item de Lista Suspensa Inserido', '".date("Y-m-d H:i:s")."', 'O Item de Lista Suspensa foi Inserido com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
 			$res1= sqlsrv_query($con, $sql1);
@@ -95,7 +107,7 @@ if(!empty($_POST['hiddenCreate'])) {
 			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Licença Inserida', '".date("Y-m-d H:i:s")."', 'A Licença foi Inserida com Sucesso!', '".$_SESSION['userId']."', '7', '".$lastId."')";
 			$res1= sqlsrv_query($con, $sql1);
 
-			//echo $sql;
+			//echo $sqlUnidade;
        
        }
    }

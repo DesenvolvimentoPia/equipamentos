@@ -34,6 +34,31 @@ include "./conexao.php";
 
 	<?php } ?>
 
+	<?php if($_GET['tipo'] == "Setores") { ?> 
+
+	<select name="inputUnidade" id="inputUnidade" required>	
+		<?php 
+		$sqlUnidade = "SELECT * FROM relatorios_listas WHERE tipo = 21";
+		$resUnidade = sqlsrv_query($con, $sqlUnidade);
+
+
+		$i = 0;
+		while($rowUnidade = sqlsrv_fetch_array($resUnidade)) { 
+			$nome[$i]['nome'] = $rowUnidade['nome'];
+			$nome[$i]['cod'] = $rowUnidade['id'];
+			$i++;
+		}
+
+		sort($nome);
+
+		for($i = 0; $i < count($nome); $i++) { 
+		?>
+		<option value="<?=$nome[$i]['cod'];?>" <?php if($i == 0) echo "selected";?>><?=$nome[$i]['nome'];?></option>
+		<?php } ?>
+	</select><span>*</span>
+
+	<?php } ?>
+
 
 	<input type="submit" name="enviar" >
 

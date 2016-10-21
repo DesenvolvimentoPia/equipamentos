@@ -193,6 +193,72 @@ form {
     margin: 12px auto;
 }
 
+
+form.editar {
+    width: 52%;
+    margin: 12px auto;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 8%;
+}
+
+div#rightDados {
+    display: inline-block;
+    width: 26.7%;
+    text-align: center;
+    margin: 12px auto;
+    background: #AAA;
+    color: #FFF;
+    margin-right: 4%;
+}
+
+h4 {
+    background: #777;
+    padding: 16px 0;
+    font-size: 18px;
+    font-weight: normal;
+    font-family: "Champagne";
+}
+
+h5 {
+    background: #999;
+    margin: 7px 0 7px 5%;
+    padding: 12px 0;
+    width: 90%;
+    font-weight: normal;
+}
+
+#rightDados a.botao {
+    margin: 0 auto 16px;
+    display: block;
+    background: #c59449;
+    width: 70%;
+    padding: 14px 0;
+    cursor: pointer;
+    transition: all 0.43s;
+    -o-transition: all 0.43s;
+    -moz-transition: all 0.43s;
+    -webkit-transition: all 0.43s;
+}
+
+#rightDados a.botao:hover {
+    background: #d69b41;
+}
+
+form#selectSetor, form#selectSetor2 {
+    width: 90%;
+    height: 0px;
+    margin: 0 auto;
+    overflow: hidden;
+    transition: all 0.43s;
+    -o-transition: all 0.43s;
+    -moz-transition: all 0.43s;
+    -webkit-transition: all 0.43s;
+}
+form#selectSetor select, form#selectSetor2 select {
+    width: 100%;
+}
+
 label {
     display: block;
     text-align: center;
@@ -966,7 +1032,7 @@ h3 {
     font-size: 20px;
     text-align: left;
     text-shadow: 1px 1px 1px #999, -1px -1px 1px #777;
-    border-bottom: 1px solid #AAA;
+    border-bottom: 1px solid #666;
     padding-bottom: 12px;
 }
 
@@ -976,7 +1042,7 @@ h3 {
     font-size: 70px;
     font-family: 'champagne';
     text-shadow: 1px 1px 1px #777;
-    border-top: 1px solid #777;
+    border-top: 1px solid #AAA;
     padding-top: 12px;
 }
 
@@ -1014,3 +1080,6 @@ h3 {
 .coluna:nth-child(3) {
     width: 48%;
 }
+
+
+

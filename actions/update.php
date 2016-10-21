@@ -88,6 +88,15 @@ if(!empty($_POST['hiddenUpdate'])) {
 
 			$resultado = "Item de Lista Suspensa Alterado com Sucesso!";	
 
+			
+
+		if(isset($_POST['inputUnidade'])) {
+
+			$sqlUnidade = "UPDATE relatorios_setores_unidades SET id_unidade = '".$_POST['inputUnidade']."' WHERE id_setor = ".$_POST['hiddenLista'];
+
+			$resUnidade = sqlsrv_query($con, $sqlUnidade);		
+		}	
+
 			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Item de Lista Suspensa Alterado', '".date("Y-m-d H:i:s")."', 'O Item de Lista Suspensa ".$_POST['hiddenLista']." foi Alterado com Sucesso!', '".$_SESSION['userId']."', '7', '".$_POST['hiddenLista']."')";
 			$res1= sqlsrv_query($con, $sql1);
 

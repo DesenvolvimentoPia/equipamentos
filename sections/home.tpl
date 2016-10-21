@@ -70,7 +70,7 @@
         return 'rgba(' + randomScalingFactor() + ',' + randomScalingFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
     };
 
-    var cor = ["#DD7932", "#CC7016", "#DDAA23", "#EC7B16", "#BB9a25", "#CC7707", "#ECa832", "#BB9952", "#ee9932", "#cc9952", "#be8a52", "#f07a53", "#ce8a23", "#ce8a23", "#ce8a23"];
+    var cor = ["#DD7932", "#CC7016", "#DDAA23", "#EC7B16", "#BB9a25", "#CC7707", "#ECa832", "#BB9952", "#ee9932", "#cc9952", "#be8a52", "#f07a53", "#DC8a23", "#AA8a23", "#cCAA23", "#Fe7016", "#AAA032", "#AB5234", "#ce8a23"];
 
     var config = {
         type: 'pie',

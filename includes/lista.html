@@ -24,7 +24,7 @@ $rowItem = sqlsrv_fetch_array($resItem);
 		$resTipo = sqlsrv_query($con, $sqlTipo);
 
 		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
-		<option <?php if($rowTipo['nome'] == $_SESSION['tipoAtual']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
+		<option <?php if($rowTipo['nome'] == $_GET['tipo']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
 		<?php } ?>
 	</select>
 
@@ -35,6 +35,35 @@ $rowItem = sqlsrv_fetch_array($resItem);
 	<select name="inputTipoCategoria" id="inputTipoCategoria" required>	
 		<option value="1" <?php if($rowItem['tipo'] == 1) echo "selected";?>>Equipamento</option>
 		<option value="2" <?php if($rowItem['tipo'] == 2) echo "selected";?>>Licença</option>
+	</select><span>*</span>
+
+	<?php } ?>
+
+
+	<?php if($_GET['tipo'] == "Setores") { ?> 
+
+	<select name="inputUnidade" id="inputUnidade" required>	
+		<?php 
+		$sqlUnidade = "SELECT * FROM relatorios_listas WHERE tipo = 21";
+		$resUnidade = sqlsrv_query($con, $sqlUnidade);
+
+		$sqlUnidadeAtual = "SELECT * FROM relatorios_setores_unidades WHERE id_setor = ".$_GET['id'];
+		$resUnidadeAtual = sqlsrv_query($con, $sqlUnidadeAtual);
+		$rowUnidadeAtual = sqlsrv_fetch_array($resUnidadeAtual);
+
+		$i = 0;
+		while($rowUnidade = sqlsrv_fetch_array($resUnidade)) { 
+			$nome[$i]['nome'] = $rowUnidade['nome'];
+			$nome[$i]['cod'] = $rowUnidade['id'];
+			$i++;
+		}
+
+		sort($nome);
+
+		for($i = 0; $i < count($nome); $i++) { 
+		?>
+		<option value="<?=$nome[$i]['cod'];?>" <?php if($nome[$i]['cod'] == $rowUnidadeAtual['id_unidade']) echo "selected";?>><?=$nome[$i]['nome'];?></option>
+		<?php } ?>
 	</select><span>*</span>
 
 	<?php } ?>

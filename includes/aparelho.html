@@ -14,7 +14,7 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 <section class="aparelho">
 	<h2>Editar Equipamento - <?=$rowEquipamento['id']?></h2>
 
-	<form id="editarEquipamento" action="./" method="post">
+	<form class="editar" id="editarEquipamento" action="./" method="post">
 	<input type="hidden" name="hiddenUpdate" value="true">
 	<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
 
@@ -82,6 +82,82 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 	</form>
 
+
+	<div id="rightDados">
+		<h4>Dados do Equipamento</h4>
+
+		<h5>Setor</h5>
+
+		<form action="./" method="post" id="selectSetor">
+
+		<select id="selectAddSetor" name="selectAddSetor">
+
+		<?php 
+
+			$sqlSetor = "SELECT a.*, c.nome as unidade FROM relatorios_listas a 
+			LEFT JOIN relatorios_setores_unidades b ON
+			a.id = b.id_setor
+			LEFT JOIN relatorios_listas c ON
+			b.id_unidade = c.id
+		WHERE a.tipo = 19";
+		$resSetor = sqlsrv_query($con, $sqlSetor);
+
+		while($rowSetor = sqlsrv_fetch_array($resSetor)) { 
+			$nome[$i]['unidade'] = $rowSetor['unidade'];
+			$nome[$i]['nome'] = $rowSetor['nome'];
+			$nome[$i]['id'] = $rowSetor['id'];
+			$i++;
+		}
+
+		sort($nome);
+
+		for($i = 0; $i < count($nome); $i++) { 
+
+		?>
+
+		<option value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['unidade'];?> - <?=$nome[$i]['nome'];?></option>
+
+		<?php } ?>
+			
+		</select>
+
+		</form>
+
+		<a class="botao" onclick="document.getElementById('selectSetor').style.margin = '0px auto 12px'; document.getElementById('selectSetor').style.height = '52px';">Adicionar Setor</a>
+
+		<h5>Responsáveis</h5>
+
+		<select id="selectAddSetor" name="selectAddSetor2">
+
+		<?php 
+
+			$sqlSetor = "SELECT * FROM relatorios_funcionarios";
+		$resSetor = sqlsrv_query($con, $sqlSetor);
+		$i = 0;
+		while($rowSetor = sqlsrv_fetch_array($resSetor)) { 
+			$nome[$i]['nome'] = $rowSetor['nome'];
+			$nome[$i]['id'] = $rowSetor['id'];
+			$i++;
+		}
+
+		sort($nome);
+
+		for($i = 0; $i < count($nome); $i++) { 
+
+		?>
+
+		<option value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['nome'];?></option>
+
+		<?php } ?>
+			
+		</select>
+
+		<a class="botao" onclick="document.getElementById('selectSetor2').style.margin = '0px auto 12px'; document.getElementById('selectSetor2').style.height = '52px';">Adicionar Responsável</a>
+
+	</div>
+
+
+	<!-- Histórico do Equipamento -->
 	<h2 style="margin-top: 52px">Histórico do Equipamento</h2>
 
 	<div id="historicoEquipamento" ng-app="appHistoricoEquipamento" ng-controller="myCtrlHistoricoEquipamento">
