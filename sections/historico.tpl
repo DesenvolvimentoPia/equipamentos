@@ -1,6 +1,6 @@
 <h1>CONSULTAR HISTÓRICO</h1>
 
-    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
+    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" max-size="16" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
 
 	<div class="tituloResultados">
 		<a class="linkTitulo2 selecionado" ng-click="ordenar2('id');">Dia e Hora</a><a  class="linkTitulo2" ng-click="ordenar2('evento');">Evento</a><a  class="linkTitulo2" ng-click="ordenar2('descricao');">Descrição</a><a  class="linkTitulo2" ng-click="ordenar2('usuario');">Usuário</a>
@@ -10,7 +10,7 @@
 		<div class="colunaResultado2">{{y.diaHora}}</div><div class="colunaResultado2">{{y.evento}}</div><div class="colunaResultado2">{{y.descricao}}</div><div class="colunaResultado2">{{y.usuario}}</div>
 	</div>
 
-    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
+    <pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()" max-size="16" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
 
 	<script>
 

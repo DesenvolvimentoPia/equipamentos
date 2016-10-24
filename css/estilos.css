@@ -1081,5 +1081,61 @@ h3 {
     width: 48%;
 }
 
+.itemCompleto {
+    width: 14px;
+    height: 18px;
+    display: inline-block;
+    padding: 0;
+    position: relative;
+    background: rgb(107, 168, 204);
+    margin-top: -7px;
+    margin-left: -27px;
+    float: left;
+}
 
+.itemAlocado {
+    width: 14px;
+    height: 16px;
+    display: inline-block;
+    padding: 0;
+    position: relative;
+    background: rgb(94, 128, 73);
+    margin-top: 7px;
+    margin-left: -27px;
+    float: left;
+}
 
+#rightDados p {
+    background: rgba(255,255,255,.25);
+    width: 70%;
+    margin: 0px auto 7px;
+}
+
+a.totais:nth-child(4) {
+    margin-left: 5%;
+}
+
+a.totais:nth-child(6) {
+    background: #e49721;
+    color: #FFF;
+}
+
+a.totais {
+    display: inline-block;
+    width: 29.32%;
+    padding: 20px 0 15px;
+    margin: -3px 0.5% 7px;
+    text-align: center;
+    background: #CCC;
+    font-size: 20px;
+    font-family: "Champagne";
+    cursor: pointer;
+    transition: all 0.43s;
+    -o-transition: all 0.43s;
+    -moz-transition: all 0.43s;
+    -webkit-transition: all 0.43s;
+}
+
+a.totais:hover {
+    opacity: 0.79;
+}

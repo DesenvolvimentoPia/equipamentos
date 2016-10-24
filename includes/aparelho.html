@@ -89,6 +89,9 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 		<h5>Setor</h5>
 
 		<form action="./" method="post" id="selectSetor">
+		<input type="hidden" name="hiddenUpdate" value="true">
+		<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
+		<input type="hidden" name="hiddenEquipamentoTipo" value="<?=$rowEquipamento['tipo']?>">
 
 		<select id="selectAddSetor" name="selectAddSetor">
 
@@ -102,6 +105,7 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 		WHERE a.tipo = 19";
 		$resSetor = sqlsrv_query($con, $sqlSetor);
 
+		$i = 0;
 		while($rowSetor = sqlsrv_fetch_array($resSetor)) { 
 			$nome[$i]['unidade'] = $rowSetor['unidade'];
 			$nome[$i]['nome'] = $rowSetor['nome'];
@@ -111,23 +115,58 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 		sort($nome);
 
+		$sqlCompare = "SELECT a.id_setor AS setor FROM relatorios_itens_setores a 
+		INNER JOIN  relatorios_listas b ON
+		a.id_setor = b.id
+		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare = sqlsrv_has_rows($resCompare);
+
+		if($numCompare) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$setorAtual = $rowCompare['setor'];
+		}
+
 		for($i = 0; $i < count($nome); $i++) { 
 
 		?>
 
-		<option value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['unidade'];?> - <?=$nome[$i]['nome'];?></option>
+		<option <?php if(isset($setorAtual) && $nome[$i]['id'] == $setorAtual) echo "selected"; ?> value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['unidade'];?> - <?=$nome[$i]['nome'];?></option>
 
 		<?php } ?>
 			
 		</select>
 
+
+		<input type="submit" value="Salvar">
+
 		</form>
 
-		<a class="botao" onclick="document.getElementById('selectSetor').style.margin = '0px auto 12px'; document.getElementById('selectSetor').style.height = '52px';">Adicionar Setor</a>
+		<?php
+
+		$sqlCompare = "SELECT b.nome FROM relatorios_itens_setores a 
+		INNER JOIN  relatorios_listas b ON
+		a.id_setor = b.id
+		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare = sqlsrv_has_rows($resCompare);
+
+		if($numCompare) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+		?>
+		<p><?=$rowCompare['nome'];?></p>
+		<?php } ?>
+
+		<a class="botao" onclick="document.getElementById('selectSetor').style.margin = '0px auto 12px'; document.getElementById('selectSetor').style.height = '106px';">Adicionar Setor</a>
 
 		<h5>Responsáveis</h5>
 
-		<select id="selectAddSetor" name="selectAddSetor2">
+		<form action="./" method="post" id="selectSetor2">
+		<input type="hidden" name="hiddenUpdate" value="true">
+		<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
+		<input type="hidden" name="hiddenEquipamentoTipo" value="<?=$rowEquipamento['tipo']?>">
+
+		<select id="selectAddResponsavel" name="selectAddResponsavel">
 
 		<?php 
 
@@ -152,7 +191,11 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 			
 		</select>
 
-		<a class="botao" onclick="document.getElementById('selectSetor2').style.margin = '0px auto 12px'; document.getElementById('selectSetor2').style.height = '52px';">Adicionar Responsável</a>
+		<!--<input type="submit" value="Salvar">-->
+
+		</form>
+
+		<a class="botao" onclick="document.getElementById('selectSetor2').style.margin = '0px auto 12px'; document.getElementById('selectSetor2').style.height = '106px';">Adicionar Responsável</a>
 
 	</div>
 
