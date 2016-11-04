@@ -1128,6 +1128,7 @@ a.totais {
     text-align: center;
     background: #CCC;
     font-size: 20px;
+    color: #222;
     font-family: "Champagne";
     cursor: pointer;
     transition: all 0.43s;

@@ -1,0 +1,103 @@
+<meta charset="utf-8">
+<style type="text/css">
+	p {
+		margin: 2px 0;
+	}
+
+	div {
+		font-family: calibri;
+		color: #333;
+		margin-bottom: 7px;
+		padding: 12px;
+	}
+
+	div:nth-child(odd){
+		background: #EEE;
+	}
+</style>
+
+<?php
+
+
+
+function file_get_contents_utf8($fn) {
+     $content = file_get_contents($fn);
+      return mb_convert_encoding($content, 'UTF-8',
+          mb_detect_encoding($content, 'UTF-8, ISO-8859-1', true));
+}
+?>
+
+<?php
+
+include "conexao.php";
+
+$arquivo = file_get_contents_utf8("usuariosAD.csv");
+
+$explodir = explode("
+", $arquivo);
+
+for($i = 1; $i < count($explodir)-1; $i++) {
+	$matricula = "";
+	$nome = "";
+	$ou = "";
+	$email = "";
+	$logon = "";
+
+	if(!strstr($explodir[$i], "OU=Desligados") && !strstr($explodir[$i], "OU=Service Accounts") && !strstr($explodir[$i], "OU=OU_Administradores") && !strstr($explodir[$i], "OU=Terceiros") && !strstr($explodir[$i], "OU=Usuarios Especiais") && !strstr($explodir[$i], "DISABLED")){ 
+
+
+		$explodir2 = explode(";", $explodir[$i]);
+		for($z = 0; $z < count($explodir2); $z++) {
+
+			if((strstr($explodir2[$z], "CN") && !strstr($explodir2[$z], ",")) || (strstr($explodir2[$z], "OU") && !strstr($explodir2[$z], ",")) || $z == 6 || $z == 8 || $z == 3) {
+
+
+
+				if($explodir2[$z] == 3) {
+					$email = $explodir2[$z];
+				}		
+				else {
+				//if(!strstr($explodir2[$z], ",")) echo $explodir2[$z]."<br>";
+				if(strstr($explodir2[$z], "CN") && !strstr($explodir2[$z], ",")) {
+					$sql = "SELECT * FROM relatorios_funcionarios WHERE nome LIKE '%".str_replace('CN=', '', $explodir2[$z])."%' OR  nomeDatasul LIKE '%".str_replace('CN=', '', $explodir2[$z])."%'";
+					$res = sqlsrv_query($con, $sql);
+					$num = sqlsrv_has_rows($res);
+					if($num) {
+						$row = sqlsrv_fetch_array($res);
+						//echo "Matricula: ".$row['matricula']."<br>";
+						$matricula = $row['matricula'];
+						$nome = str_replace('CN=', '', $explodir2[$z]);
+					}
+					//echo $sql;
+				}
+
+				if(strstr($explodir2[$z], "OU=") && !strstr($explodir2[$z], ",")) {
+					$ou .= $explodir2[$z].",";
+				}		
+
+				else if(!strstr($explodir2[$z], "OU=") && !strstr($explodir2[$z], "CN=")) {
+					$logon = $explodir2[$z];
+				}
+			}
+			}
+		}
+
+	if($matricula != "") {
+		echo "<div>";
+		echo "NOME: ".$nome."<br>";
+		echo "MATRÍCULA: ".$matricula."<br>";
+		echo "OU: ".substr($ou, 0, -1)."<br>";
+		if(!strstr($ou, 'Usuarios Coletores')) $email = $logon;
+		echo "LOGON: ".str_replace('@pia.com.br', '', $logon)."<br>";
+		echo "E-MAIL: ".$email."<br>";
+		echo "</div>";
+		$sql2 = "INSERT INTO relatorios_usuarios_ad (id_datasul, ou, email, logon) VALUES ('".$matricula."', '".substr($ou, 0, -1)."', '".$email."', '".$logon."')";
+		$res2 = sqlsrv_query($con, $sql2);
+	}
+
+	}
+	//$sql = "INSERT INTO relatorios_funcionarios (unidade, matricula, nome, lotacao, centroCusto, dataAdmissao, usuarioDatasul, nomeDatasul, pessoaFisica) VALUES ('".$unidade."', '".$matricula."', '".$nome."', '".$lotacao."', '".$custo."', '".$data."', '".$usuario."', '".$nomeUsuario."', '".$pessoa."')";
+	//$res = sqlsrv_query($con, $sql);
+
+
+}

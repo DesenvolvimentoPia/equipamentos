@@ -23,7 +23,13 @@
 	
 	<input placeholder="Pesquisa Rápida" name="pesquisarEquipamentos" id="pesquisarEquipamentos" type="text" ng-model="filtro"><a id="adicionarEquipamento">Adicionar</a>
 
-	<a class='totais' ng-click="filtro='Alocado'" title="{{porcento2}}%" ng-bind="alocados"></a><a class='totais' title="{{porcento1}}%" ng-bind="completos" ng-click="filtro='Completo'"></a><a class='totais' ng-bind="total" ng-click="filtro=''"></a>
+	<a style="background-image: url(img/fundoPorcento.jpg);
+    background-position: left top;
+    background-size: {{porcento2}}% 100%;
+    background-repeat: no-repeat;" class='totais' ng-click="filtro='Alocado'" title="{{porcento2}}%" ng-bind="alocados"></a><a style="background-image: url(img/fundoPorcento.jpg);
+    background-position: left top;
+    background-size: {{porcento1}}% 100%;
+    background-repeat: no-repeat;" class='totais' title="{{porcento1}}%" ng-bind="completos" ng-click="filtro='Completo'"></a><a class='totais' ng-bind="total" ng-click="filtro=''"></a>
 
 	<div class="tituloResultados">
 	<a class="linkTitulo7 selecionado" ng-click="ordenar('id');">ID</a><a  class="linkTitulo7" ng-click="ordenar('marca');">Marca</a><a class="linkTitulo7" ng-click="ordenar('modelo');">Modelo</a><a  class="linkTitulo7" ng-click="ordenar('fornecedor');">Fornecedor</a><a  class="linkTitulo7" ng-click="ordenar('patrimonio');">Patrimônio</a><a  class="linkTitulo7" ng-click="ordenar('tag');">TAG</a><a  class="linkTitulo7" ng-click="ordenar('link');">Nota Fiscal</a>
@@ -88,7 +94,7 @@
 	}
 	else $setor = "";
 
-	if(!empty($row['setor']) && !empty($row['tag']) && !empty($row['modelo']) && !empty($row['data_nf'])) {
+	if(!empty($row['setor']) && !empty($row['tag']) && !empty($row['nomeMarca']) && !empty($row['modelo']) && !empty($row['data_nf'])) {
 		$completo = "itemCompleto";
 		$completos++;
 	}
@@ -108,8 +114,10 @@
       $scope.total = "TOTAL: <?=$i;?>";
       $scope.completos = "COMPLETOS: <?=$completos;?>";
       $scope.alocados = "ALOCADOS: <?=$alocados;?>";
-      $scope.porcento1 = (<?=$completos;?>/<?=$i;?>)*100;
-      $scope.porcento2 = (<?=$alocados;?>/<?=$i;?>)*100;
+      if(<?=$i;?> != 0) $scope.porcento1 = (<?=$completos;?>/<?=$i;?>)*100;
+      else $scope.porcento1 = 100;
+      if(<?=$i;?> != 0) $scope.porcento2 = (<?=$alocados;?>/<?=$i;?>)*100;
+      else $scope.porcento2 = 100;
       $scope.porcento1 = $scope.porcento1.toFixed(2);
       $scope.porcento2 = $scope.porcento2.toFixed(2);
 
