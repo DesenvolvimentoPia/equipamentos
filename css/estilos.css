@@ -15,7 +15,7 @@ del, dfn, em, img, ins, kbd, q, samp,
 small, strong, sub, sup, var,
 b, i,
 dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
+fieldset, form, label, legend,a
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section, summary,
@@ -183,7 +183,7 @@ h2 {
     padding: 16px 0;
 }
 
-#listas, #listas, #equipamentos, #licensas, #historico, #movimentos, #perfis, #notebooks {
+#listas, #listas, #equipamentos, #almox, #licensas, #historico, #movimentos, #perfis, #notebooks {
 	display: none;
 }
 
@@ -245,7 +245,7 @@ h5 {
     background: #d69b41;
 }
 
-form#selectSetor, form#selectSetor2 {
+form#selectUnidade, form#selectUnidade2, form#selectUnidade3 {
     width: 90%;
     height: 0px;
     margin: 0 auto;
@@ -255,7 +255,7 @@ form#selectSetor, form#selectSetor2 {
     -moz-transition: all 0.43s;
     -webkit-transition: all 0.43s;
 }
-form#selectSetor select, form#selectSetor2 select {
+form#selectUnidade select, form#selectUnidade2 select, form#selectUnidade3 select {
     width: 100%;
 }
 
@@ -762,7 +762,7 @@ a#backToTop:hover {
     background: #ce8a23;
 }
 
-div#equipamentoDinamico, div#licensaDinamico, div#listaDinamico {
+div#equipamentoDinamico, div#licensaDinamico, div#listaDinamico, div#almoxDinamico {
     margin-top: 22px;
 }
 

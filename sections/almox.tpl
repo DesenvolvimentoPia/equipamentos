@@ -1,4 +1,4 @@
-<h1>EQUIPAMENTOS</h1>
+<h1>EQUIPAMENTOS ALMOX TI</h1>
 
 
 <?php 
@@ -11,24 +11,14 @@ while($row = sqlsrv_fetch_array($res)) {
 
 ?><a class="subMenu<?php if(!empty($_POST['hiddenEquipamentoTipo']) && $_POST['hiddenEquipamentoTipo'] == $row['id']) echo ' selecionado';?>" data-cod="<?=$row['id']?>"><?=$row['nome']?></a><?php } ?>
 
-<div id="equipamentoDinamico"></div>
+<div id="almoxDinamico"></div>
 
 
 
 <script type="text/javascript" language="javascript">
     $(function() {
 
-        <?php if(!empty($_POST['hiddenEquipamento'])) { ?>
-
-        $.ajax({
-          url: "equipamento.php?id=<?=$_POST['hiddenEquipamento']?>"
-        }).done(function(data) { // data what is sent back by the php page
-          $('#equipamentoDinamico').html(data); // display data
-        });
-
-        <?php } ?>
-
-        $(".subMenu").click(function() {
+    $(".subMenu").click(function() {
         	
 		var elementos = document.getElementsByClassName('subMenu');
 
@@ -40,13 +30,13 @@ while($row = sqlsrv_fetch_array($res)) {
 
         	var ultimo = this.dataset.cod;
 
-            $("#equipamentoDinamico").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
+            $("#almoxDinamico").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
 
             // Faz requisição ajax e envia o ID da Categoria via método POST
-            $.post("dinamicos/equipamentos.php", {ultimo: ultimo}, function(resposta) {
+            $.post("dinamicos/almox.php", {ultimo: ultimo}, function(resposta) {
 
                // Coloca a resposta na DIV
-               setTimeout(function() { $("#equipamentoDinamico").html(resposta); }, 700);
+               setTimeout(function() { $("#almoxDinamico").html(resposta); }, 700);
            
             });
         });

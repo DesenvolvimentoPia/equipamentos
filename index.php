@@ -7,7 +7,7 @@ ini_set('display_errors',1);
 ini_set('display_startup_erros',1);
 error_reporting(E_ALL);
 
-if(empty($_SESSION['usuario']) && !($_SESSION['acesso'] == 9 || $_SESSION['acesso'] == 2)) header("location: ./login.php");
+if(empty($_SESSION['usuario']) && !($_SESSION['acesso'] == 9 || $_SESSION['acesso'] == 2)) header("location: ../sisti/login.php");
 
 else {
 

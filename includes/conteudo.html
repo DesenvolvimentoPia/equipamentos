@@ -2,7 +2,10 @@
 
 // Arquivo de Corpo
 
+//Permite conexão com banco de Dados
 include "./conexao.php";
+
+// Actions
 include "./actions/create.php";
 include "./actions/update.php";
 
@@ -28,16 +31,32 @@ $(function(){
 <div id="resultadoSql"><?=$resultado;?></div>
 <?php } ?>
 
+<?php 
+
+if(!empty($_POST['hiddenEquipamento'])) {
+	$getEquipamento = $_POST['hiddenEquipamento'];
+	if(!empty($_POST['hiddenEquipamentoTipo'])) $getEquipamentoTipo = $_POST['hiddenEquipamentoTipo'];
+	else {
+		$sqlHidden = "SELECT tipo FROM relatorios_equipamentos WHERE id = ".$getEquipamento;
+		$resHidden = sqlsrv_query($con, $sqlHidden);
+		$rowHidden = sqlsrv_fetch_array($resHidden);
+
+		$_POST['hiddenEquipamentoTipo'] = $rowHidden['tipo'];
+		$getEquipamentoTipo = $_POST['hiddenEquipamentoTipo'];
+	}
+}
+?>
 
 <header>
 	<h1><img src="./img/logo2.png" id="logoInterno">Gestão de Equipamentos - PIÁ</h1>
 
 	<nav>
-		<a href="#home" class="acao selecionado">Home</a>
-		<a href="#equipamentos" class="acao">Equipamentos</a>
+		<a href="#home" class="acao<?php if(empty($getEquipamento)) echo ' selecionado'; ?>">Home</a>
+		<a href="#equipamentos" class="acao<?php if(!empty($getEquipamento)) echo ' selecionado'; ?>">Equipamentos</a>
 		<?php if($_SESSION['acesso'] == 9) { ?><a href="#licensas" class="acao">Licenças</a><?php } ?>
 		<a href="#listas" class="acao">Listas Suspensas</a>
 		<?php if($_SESSION['acesso'] == 9) { ?><a href="#movimentos" class="acao">Movimentos</a><?php } ?>
+		<?php if($_SESSION['acesso'] == 9) { ?><a href="#almox" class="acao">Almox</a><?php } ?>
 		<?php if($_SESSION['acesso'] == 2) { ?><a href="http://suporte.pia.com.br/relatorios/aprendizes/" target="_blank">Registro</a><?php } ?>
 		<a href="#historico" class="acao">Histórico</a>
 		<a href="./logout.php">Logout</a>
@@ -47,11 +66,11 @@ $(function(){
 
 <main>
 	
-<section id="home">
+<section id="home"<?php if(!empty($getEquipamento)) echo " style='display: none'"; ?>>
 	<?php include "sections/home.tpl"; ?>
 </section>
 
-<section id="equipamentos" ng-app="appEquipamentos" ng-controller="myCtrlEquipamentos">
+<section id="equipamentos"<?php if(!empty($getEquipamento)) echo " style='display: block'"; ?> ng-app="appEquipamentos" ng-controller="myCtrlEquipamentos">
 	<?php include "sections/equipamentos.tpl"; ?>
 </section>
 
@@ -63,6 +82,10 @@ $(function(){
 	<?php include "sections/listas.tpl"; ?>
 </section>
 
+<section id="almox" ng-app="appEquipamentosAlmox" ng-controller="myCtrlAlmox">
+	<?php include "sections/almox.tpl"; ?>
+</section>
+
 <section id="movimentos" ng-app="appMovimentos" ng-controller="myCtrlMovimentos">
 	<?php include "sections/movimentos.tpl"; ?>
 </section>
@@ -71,9 +94,6 @@ $(function(){
 	<?php include "sections/historico.tpl"; ?>
 </section>
 
-<section id="perfis" ng-app="appPerfis" ng-controller="myCtrlPerfis">
-	<?php include "sections/perfil.tpl"; ?>
-</section>
 
 
 <a id="backToTop">^</a>

@@ -18,7 +18,7 @@
 
 	?>
 	
-	<div id="angularEquipamentos" ng-app="appAngularEquipamentos" ng-controller="myCtrlAngularEquipamentos">
+	<div id="angularEquipamentosAlmox" ng-app="appAngularEquipamentosAlmox" ng-controller="myCtrlAngularEquipamentosAlmox">
 	<h2 id="h2Equipamentos">Lista de Equipamentos: <?=$tipo;?></h2>
 	
 	<input placeholder="Pesquisa Rápida" name="pesquisarEquipamentos" id="pesquisarEquipamentos" type="text" ng-model="filtro"><a id="adicionarEquipamento">Adicionar</a>
@@ -35,14 +35,14 @@
 	<a class="linkTitulo7 selecionado" ng-click="ordenar('id');">ID</a><a  class="linkTitulo7" ng-click="ordenar('marca');">Marca</a><a class="linkTitulo7" ng-click="ordenar('modelo');">Modelo</a><a  class="linkTitulo7" ng-click="ordenar('fornecedor');">Fornecedor</a><a  class="linkTitulo7" ng-click="ordenar('patrimonio');">Patrimônio</a><a  class="linkTitulo7" ng-click="ordenar('tag');">TAG</a><a  class="linkTitulo7" ng-click="ordenar('link');">Nota Fiscal</a>
 	</div>
 
-	<a class="linhaResultado7 {{x.tipo}}" ng-repeat="x in recordsEquipamentos | orderBy:myOrderBy | filter: filtro | filter: filtro2">
+	<a class="linhaResultado7 {{x.tipo}}" ng-repeat="x in recordsEquipamentosAlmox | orderBy:myOrderBy | filter: filtro | filter: filtro2">
 		<div class="{{x.completo}}" title="Item Completo"></div><div class="{{x.setor}}" title="Item Alocado"></div><div data-cod="{{x.id}}" class="colunaResultado colunaId status{{x.status}}" title="{{x.titulo}}">{{x.id}}<span class='editar'> - Editar</span></div><div class="colunaResultado">{{x.marca}}</div><div class="colunaResultado">{{x.modelo}}</div><div class="colunaResultado">{{x.fornecedor}}</div><div class="colunaResultado">{{x.patrimonio}}</div><div class="colunaResultado">{{x.tag}}</div><div class="colunaResultado"><span data-abrir="{{x.link}}" onclick="window.open(this.dataset.abrir, '_blank')">Ver Nota</span></div>
 	</a>
 
-	<div class="semResultados" ng-if="!recordsEquipamentos[0]">Nenhum Resultado.</div>
+	<div class="semResultados" ng-if="!recordsEquipamentosAlmox[0]">Nenhum Resultado.</div>
 
 	</div>
- 
+
 	<script>
 
 	$(function() {
@@ -58,20 +58,20 @@
 		});
 	});
 
-	var app = angular.module("appAngularEquipamentos", []);
-	app.controller("myCtrlAngularEquipamentos", function($scope) {
+	var app = angular.module("appAngularEquipamentosAlmox", []);
+	app.controller("myCtrlAngularEquipamentosAlmox", function($scope) {
 
     
-    $scope.recordsEquipamentos = [
- 
+    $scope.recordsEquipamentosAlmox = [
+
 	<?php
 
 	$sql = "SELECT relatorios_equipamentos.*, a.nome AS nomeMarca, b.nome AS nomeFornecedor, d.nome AS setor FROM relatorios_equipamentos 
 	LEFT JOIN relatorios_listas a ON relatorios_equipamentos.marca = a.id AND a.tipo = 18 
 	LEFT JOIN relatorios_listas b ON relatorios_equipamentos.fornecedor = b.id AND b.tipo = 17 
 	LEFT JOIN relatorios_itens_setores c ON relatorios_equipamentos.id = c.id_item
-	LEFT JOIN relatorios_centro_custo d ON c.id_setor = d.codigo
-	WHERE relatorios_equipamentos.disponivel = '1' AND relatorios_equipamentos.tipo = '".$_POST['ultimo']."' ORDER BY relatorios_equipamentos.id DESC";
+	LEFT JOIN relatorios_listas d ON c.id_setor = d.id
+	WHERE relatorios_equipamentos.disponivel = '1' AND relatorios_equipamentos.status = '1' AND relatorios_equipamentos.tipo = '".$_POST['ultimo']."' ORDER BY relatorios_equipamentos.id DESC";
 	$res = sqlsrv_query($con, $sql);
 
 	//echo $sql;
@@ -161,6 +161,6 @@ $(function () {
 	});
 });
 
-angular.bootstrap('#angularEquipamentos', ['appAngularEquipamentos']);
+angular.bootstrap('#angularEquipamentosAlmox', ['appAngularEquipamentosAlmox']);
 	
 </script>

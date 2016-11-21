@@ -11,25 +11,53 @@ if(!empty($_POST['hiddenUpdate'])) {
 			$_POST[$chave] = str_replace("'", "&#039;", $_POST[$chave]);
 		}
 
-	if(!empty($_POST['selectAddSetor'])) {
+	if(!empty($_POST['selectAddUnidade'])) {
+		$sqlCompare = "SELECT * FROM relatorios_itens_unidades WHERE id_item = ".$_POST['hiddenEquipamento']." AND id_categoria = ".$_POST['hiddenEquipamentoTipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare = sqlsrv_has_rows($resCompare);
+
+		if($numCompare) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$sql = "UPDATE relatorios_itens_unidades SET id_unidade = ".$_POST['selectAddUnidade']." WHERE id = ".$rowCompare['id'];
+			$res = sqlsrv_query($con, $sql);
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Unidade Alterada', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Unidade Alterada de ".$rowCompare['id_unidade']." para ".$_POST['selectAddUnidade'].".', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$res1= sqlsrv_query($con, $sql1);	
+		}
+
+		else {
+			$sql = "INSERT INTO relatorios_itens_unidades (id_item, id_unidade, id_categoria) VALUES ('".$_POST['hiddenEquipamento']."', '".$_POST['selectAddUnidade']."', '".$_POST['hiddenEquipamentoTipo']."')";
+			$res = sqlsrv_query($con, $sql);
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Unidade Inserida', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Unidade ".$_POST['selectAddUnidade']." Inserida com Sucesso', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$res1= sqlsrv_query($con, $sql1);	
+		}
+			$resultado = "Equipamento alterado com Sucesso!";
+
+	}
+
+
+
+
+	if(!empty($_POST['selectAddUnidade2'])) {
 		$sqlCompare = "SELECT * FROM relatorios_itens_setores WHERE id_item = ".$_POST['hiddenEquipamento']." AND id_categoria = ".$_POST['hiddenEquipamentoTipo'];
 		$resCompare = sqlsrv_query($con, $sqlCompare);
 		$numCompare = sqlsrv_has_rows($resCompare);
 
 		if($numCompare) {
 			$rowCompare = sqlsrv_fetch_array($resCompare);
-			$sql = "UPDATE relatorios_itens_setores SET id_setor = ".$_POST['selectAddSetor']." WHERE id = ".$rowCompare['id'];
+			$sql = "UPDATE relatorios_itens_setores SET id_setor = ".$_POST['selectAddUnidade2']." WHERE id = ".$rowCompare['id'];
 			$res = sqlsrv_query($con, $sql);
 
-			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Setor Alterado', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve o Setor Alterado de ".$rowCompare['id_setor']." para ".$_POST['selectAddSetor'].".', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Centro de Custo Alterado', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Centro de Custo Alterado de ".$rowCompare['id_setor']." para ".$_POST['selectAddUnidade2'].".', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
 			$res1= sqlsrv_query($con, $sql1);	
 		}
 
 		else {
-			$sql = "INSERT INTO relatorios_itens_setores (id_item, id_setor, id_categoria) VALUES ('".$_POST['hiddenEquipamento']."', '".$_POST['selectAddSetor']."', '".$_POST['hiddenEquipamentoTipo']."')";
+			$sql = "INSERT INTO relatorios_itens_setores (id_item, id_setor, id_categoria) VALUES ('".$_POST['hiddenEquipamento']."', '".$_POST['selectAddUnidade2']."', '".$_POST['hiddenEquipamentoTipo']."')";
 			$res = sqlsrv_query($con, $sql);
 
-			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Setor Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve o Setor ".$_POST['selectAddSetor']." Inserido com Sucesso', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Centro de Custo Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Centro de Custo ".$_POST['selectAddUnidade2']." Inserido com Sucesso', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
 			$res1= sqlsrv_query($con, $sql1);	
 		}
 			$resultado = "Equipamento alterado com Sucesso!";
@@ -38,14 +66,28 @@ if(!empty($_POST['hiddenUpdate'])) {
 
 
 
-	if(!empty($_POST['selectAddResponsavel'])) {
-		
-			$sql = "INSERT INTO relatorios_itens_responsaveis (id_item, id_setor, id_categoria) VALUES ('".$_POST['hiddenEquipamento']."', '".$_POST['selectAddResponsavel']."', '".$_POST['hiddenEquipamentoTipo']."')";
+
+	if(!empty($_POST['selectAddUnidade3'])) {
+		$sqlCompare = "SELECT * FROM relatorios_itens_responsaveis WHERE id_item = ".$_POST['hiddenEquipamento']." AND id_categoria = ".$_POST['hiddenEquipamentoTipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare = sqlsrv_has_rows($resCompare);
+
+		if($numCompare) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$sql = "UPDATE relatorios_itens_responsaveis SET matricula = ".$_POST['selectAddUnidade3']." WHERE id = ".$rowCompare['id'];
 			$res = sqlsrv_query($con, $sql);
 
-			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Responsável Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve o Responsável ".$_POST['selectAddResponsavel']." Inserido com Sucesso', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Responsável Alterado', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Responsável Alterado de ".$rowCompare['matricula']." para ".$_POST['selectAddUnidade3'].".', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
 			$res1= sqlsrv_query($con, $sql1);	
+		}
 
+		else {
+			$sql = "INSERT INTO relatorios_itens_responsaveis (id_item, matricula, id_categoria) VALUES ('".$_POST['hiddenEquipamento']."', '".$_POST['selectAddUnidade3']."', '".$_POST['hiddenEquipamentoTipo']."')";
+			$res = sqlsrv_query($con, $sql);
+
+			$sql1 = "INSERT INTO relatorios_historico (nome, hora, descricao, id_usuario, sistema, id_item) VALUES ('Equipamento - Responsável Inserido', '".date("Y-m-d H:i:s")."', 'O Equipamento ".$_POST['hiddenEquipamento']." Teve a Responsável ".$_POST['selectAddUnidade3']." Inserido com Sucesso', '".$_SESSION['userId']."', '7', '".$_POST['hiddenEquipamento']."')";
+			$res1= sqlsrv_query($con, $sql1);	
+		}
 			$resultado = "Equipamento alterado com Sucesso!";
 
 	}
@@ -54,7 +96,15 @@ if(!empty($_POST['hiddenUpdate'])) {
 
 
 
-	if(!empty($_POST['hiddenEquipamento']) && empty($_POST['selectAddSetor'])) {
+
+
+
+
+
+
+
+
+	if(!empty($_POST['hiddenEquipamento']) && empty($_POST['selectAddUnidade']) && empty($_POST['selectAddUnidade2']) && empty($_POST['selectAddUnidade3'])) {
 
 
 		$cortar = explode("/", $_POST['inputDataNotaFiscal']);
@@ -93,7 +143,7 @@ if(!empty($_POST['hiddenUpdate'])) {
 			if($_POST['inputCnpj'] != $rowCompare['cnpj']) $alterado .= "O Campo CNPJ foi Alterado de ".$rowCompare['cnpj']." para ".$_POST['inputCnpj'].". ";
 			if($dataNota != $rowCompare['data_nf']->format("Y-m-d")) $alterado .= "O Campo DATA NOTA FISCAL foi Alterado de ".$rowCompare['data_nf']->format("Y-m-d")." para ".$dataNota.". ";
 			if($notaFiscal != $rowCompare['link']) $alterado .= "O Campo LINK DA NOTA FISCAL foi Alterado de ".$rowCompare['link']." para ".$notaFiscal.". ";
-			if($_POST['inputObservacao'] != $rowCompare['observacao']) $alterado .= "O Campo OBSERVAÇÃO foi Alterado de ".$rowCompare['observacao']." para ".$_POST['inputObservacao'].". ";
+			if($_POST['inputObservacao'] != $rowCompare['observacao']) $alterado .= "O Campo OBSERVACAO foi Alterado de ".$rowCompare['observacao']." para ".$_POST['inputObservacao'].". ";
 			if($_POST['inputGarantia'] != $rowCompare['garantia']) $alterado .= "O Campo GARANTIA foi Alterado de ".$rowCompare['garantia']." para ".$_POST['inputGarantia'].". ";
 			if($_POST['inputStatus'] != $rowCompare['status']) $alterado .= "O Campo STATUS foi Alterado de ".$rowCompare['status']." para ".$_POST['inputStatus'].". ";
 			if($disponivel != $rowCompare['disponivel']) $alterado .= "O Campo DISPONIBILIDADE foi Alterado de ".$rowCompare['disponivel']." para ".$disponivel.". ";

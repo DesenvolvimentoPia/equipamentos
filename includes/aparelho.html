@@ -86,28 +86,22 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 	<div id="rightDados">
 		<h4>Dados do Equipamento</h4>
 
-		<h5>Setor</h5>
+		<h5>Unidade</h5>
 
-		<form action="./" method="post" id="selectSetor">
+		<form action="./" method="post" id="selectUnidade">
 		<input type="hidden" name="hiddenUpdate" value="true">
 		<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
 		<input type="hidden" name="hiddenEquipamentoTipo" value="<?=$rowEquipamento['tipo']?>">
 
-		<select id="selectAddSetor" name="selectAddSetor">
+		<select id="selectAddUnidade" name="selectAddUnidade">
 
 		<?php 
 
-			$sqlSetor = "SELECT a.*, c.nome as unidade FROM relatorios_listas a 
-			LEFT JOIN relatorios_setores_unidades b ON
-			a.id = b.id_setor
-			LEFT JOIN relatorios_listas c ON
-			b.id_unidade = c.id
-		WHERE a.tipo = 19";
+		$sqlSetor = "SELECT a.* FROM relatorios_listas a WHERE a.tipo = 21";
 		$resSetor = sqlsrv_query($con, $sqlSetor);
 
 		$i = 0;
 		while($rowSetor = sqlsrv_fetch_array($resSetor)) { 
-			$nome[$i]['unidade'] = $rowSetor['unidade'];
 			$nome[$i]['nome'] = $rowSetor['nome'];
 			$nome[$i]['id'] = $rowSetor['id'];
 			$i++;
@@ -115,23 +109,23 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 		sort($nome);
 
-		$sqlCompare = "SELECT a.id_setor AS setor FROM relatorios_itens_setores a 
+		$sqlCompare = "SELECT a.id_unidade AS unidade FROM relatorios_itens_unidades a 
 		INNER JOIN  relatorios_listas b ON
-		a.id_setor = b.id
+		a.id_unidade = b.id
 		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
 		$resCompare = sqlsrv_query($con, $sqlCompare);
 		$numCompare = sqlsrv_has_rows($resCompare);
 
 		if($numCompare) {
 			$rowCompare = sqlsrv_fetch_array($resCompare);
-			$setorAtual = $rowCompare['setor'];
+			$unidadeAtual = $rowCompare['unidade'];
 		}
 
 		for($i = 0; $i < count($nome); $i++) { 
 
 		?>
 
-		<option <?php if(isset($setorAtual) && $nome[$i]['id'] == $setorAtual) echo "selected"; ?> value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['unidade'];?> - <?=$nome[$i]['nome'];?></option>
+		<option <?php if(isset($unidadeAtual) && $nome[$i]['id'] == $unidadeAtual) echo "selected"; ?> value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['nome'];?></option>
 
 		<?php } ?>
 			
@@ -142,60 +136,169 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 		</form>
 
+
 		<?php
 
-		$sqlCompare = "SELECT b.nome FROM relatorios_itens_setores a 
+		$sqlCompare = "SELECT b.nome FROM relatorios_itens_unidades a 
 		INNER JOIN  relatorios_listas b ON
-		a.id_setor = b.id
+		a.id_unidade = b.id
 		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
 		$resCompare = sqlsrv_query($con, $sqlCompare);
 		$numCompare = sqlsrv_has_rows($resCompare);
 
 		if($numCompare) {
 			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$explodir = explode(".", $rowCompare['nome']);
+			$unidade = $explodir[0];
 		?>
 		<p><?=$rowCompare['nome'];?></p>
-		<?php } ?>
+		<?php } else { ?>
 
-		<a class="botao" onclick="document.getElementById('selectSetor').style.margin = '0px auto 12px'; document.getElementById('selectSetor').style.height = '106px';">Adicionar Setor</a>
+		<a class="botao" onclick="document.getElementById('selectUnidade').style.margin = '0px auto 12px'; document.getElementById('selectUnidade').style.height = '106px';">Adicionar Unidade</a>
+		<?php } 
 
-		<h5>Responsáveis</h5>
 
-		<form action="./" method="post" id="selectSetor2">
+		if($numCompare) { ?>
+
+		<h5>Centro de Custo</h5>
+
+		<form action="./" method="post" id="selectUnidade2">
 		<input type="hidden" name="hiddenUpdate" value="true">
 		<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
 		<input type="hidden" name="hiddenEquipamentoTipo" value="<?=$rowEquipamento['tipo']?>">
 
-		<select id="selectAddResponsavel" name="selectAddResponsavel">
+		<select id="selectAddUnidade2" name="selectAddUnidade2">
 
 		<?php 
 
-			$sqlSetor = "SELECT * FROM relatorios_funcionarios";
+		$sqlSetor = "SELECT codigo, nome FROM relatorios_centro_custo WHERE unidade LIKE '".$unidade."'";
 		$resSetor = sqlsrv_query($con, $sqlSetor);
 		$i = 0;
 		while($rowSetor = sqlsrv_fetch_array($resSetor)) { 
-			$nome[$i]['nome'] = $rowSetor['nome'];
-			$nome[$i]['id'] = $rowSetor['id'];
+			$nome2[$i]['nome'] = $rowSetor['nome'];
+			$nome2[$i]['codigo'] = $rowSetor['codigo'];
 			$i++;
 		}
 
-		sort($nome);
+		sort($nome2);
 
-		for($i = 0; $i < count($nome); $i++) { 
+		$sqlCompare = "SELECT * FROM relatorios_itens_setores a WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare2 = sqlsrv_has_rows($resCompare);
+
+		if($numCompare2) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$setorAtual = $rowCompare['id_setor'];
+		}
+
+		for($i = 0; $i < count($nome2); $i++) { 
+
+			if(!empty($nome2[$i]['nome']) && $nome2[$i]['nome'] != null && $nome2[$i]['nome'] != '') {
 
 		?>
 
-		<option value="<?=$nome[$i]['id'];?>"><?=$nome[$i]['nome'];?></option>
+		<option <?php if(isset($setorAtual) && $nome[$i]['codigo'] == $setorAtual) echo "selected"; ?> value="<?=$nome2[$i]['codigo'];?>"><?=$nome2[$i]['codigo'];?> - <?=$nome2[$i]['nome'];?></option>
 
-		<?php } ?>
+		<?php } } ?>
 			
 		</select>
 
-		<!--<input type="submit" value="Salvar">-->
+		<input type="submit" value="Salvar">
 
 		</form>
 
-		<a class="botao" onclick="document.getElementById('selectSetor2').style.margin = '0px auto 12px'; document.getElementById('selectSetor2').style.height = '106px';">Adicionar Responsável</a>
+		<?php
+
+		$sqlCompare = "SELECT a.*, b.nome FROM relatorios_itens_setores a 
+		INNER JOIN relatorios_centro_custo b ON
+		a.id_setor LIKE b.codigo
+		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare2 = sqlsrv_has_rows($resCompare);
+
+		if($numCompare2) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+		?>
+		<p><?=$rowCompare['id_setor'];?> - <?=$rowCompare['nome'];?></p>
+		<?php } else { ?>
+
+		<a class="botao" onclick="document.getElementById('selectUnidade2').style.margin = '0px auto 12px'; document.getElementById('selectUnidade2').style.height = '106px';">Adicionar Centro de Custo</a>
+
+		<?php } }
+
+		if(!empty($numCompare2) && $numCompare2) {
+			?>
+
+		<h5>Responsável</h5>
+
+
+		<form action="./" method="post" id="selectUnidade3">
+		<input type="hidden" name="hiddenUpdate" value="true">
+		<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
+		<input type="hidden" name="hiddenEquipamentoTipo" value="<?=$rowEquipamento['tipo']?>">
+
+		<select id="selectAddUnidade3" name="selectAddUnidade3">
+
+		<?php 
+
+		$sqlResponsavel = "SELECT matricula, nome FROM relatorios_funcionarios WHERE unidade LIKE '".$unidade."'";
+		$resResponsavel = sqlsrv_query($con, $sqlResponsavel);
+		$i = 0;
+		while($rowResponsavel = sqlsrv_fetch_array($resResponsavel)) { 
+			$nome3[$i]['nome'] = $rowResponsavel['nome'];
+			$nome3[$i]['matricula'] = $rowResponsavel['matricula'];
+			$i++;
+		}
+
+		sort($nome3);
+
+		$sqlCompare = "SELECT a.*, b.nome as nome FROM relatorios_itens_responsaveis a 
+		INNER JOIN relatorios_funcionarios b ON
+		a.matricula = b.matricula
+		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare3 = sqlsrv_has_rows($resCompare);
+
+		if($numCompare3) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+			$matricula = $rowCompare['matricula'];
+		}
+
+		for($i = 0; $i < count($nome3); $i++) { 
+
+			if(!empty($nome3[$i]['nome']) && $nome3[$i]['nome'] != null && $nome3[$i]['nome'] != '') {
+
+		?>
+
+		<option <?php if(isset($matricula) && $nome[$i]['matricula'] == $matricula) echo "selected"; ?> value="<?=$nome3[$i]['matricula'];?>"><?=$nome3[$i]['nome'];?></option>
+
+		<?php } } ?>
+			
+		</select>
+
+		<input type="submit" value="Salvar">
+
+		</form>
+
+		<?php
+
+
+		$sqlCompare = "SELECT a.*, b.nome as nome FROM relatorios_itens_responsaveis a 
+		INNER JOIN relatorios_funcionarios b ON
+		a.matricula = b.matricula
+		WHERE a.id_item = ".$rowEquipamento['id']." AND a.id_categoria = ".$rowEquipamento['tipo'];
+		$resCompare = sqlsrv_query($con, $sqlCompare);
+		$numCompare3 = sqlsrv_has_rows($resCompare);
+
+		if($numCompare3) {
+			$rowCompare = sqlsrv_fetch_array($resCompare);
+		?>
+		<p style="margin-bottom: 16px;"><?=$rowCompare['nome'];?></p>
+		<?php } else { ?>
+
+		<a class="botao" onclick="document.getElementById('selectUnidade3').style.margin = '0px auto 12px'; document.getElementById('selectUnidade3').style.height = '106px';">Adicionar Responsável</a>
+
+		<?php } } ?>
 
 	</div>
 
