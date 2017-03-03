@@ -27,6 +27,9 @@ if(!empty($_POST['hiddenCreate'])) {
 		}
 
 		$_POST['inputModelo'] = str_replace("'", '"', $_POST['inputModelo']);
+		
+		if(empty($_POST['nomeRede'])) $nomeRede = "";
+		else $nomeRede = $_POST['nomeRede'];
 
 		if(isset($_POST['inputDisponivel']) && $_POST['inputDisponivel'] == 1) $disponivel = 1;
 		else $disponivel = 0;
@@ -38,9 +41,10 @@ if(!empty($_POST['hiddenCreate'])) {
 
 			if(!isset($tags[$i])) $tags[$i] = "";
 
-			$sql = "INSERT INTO relatorios_equipamentos (tipo, patrimonio, marca, modelo, tag, nota_fiscal, fornecedor, cnpj, data_nf, link, observacao, disponivel, garantia, status) VALUES ('".$_POST['inputTipo']."', '".$patrimonios[$i]."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$tags[$i]."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$_POST['inputGarantia']."','".$_POST['inputStatus']."')";
+			$sql = "INSERT INTO relatorios_equipamentos (tipo, patrimonio, marca, modelo, tag, nota_fiscal, fornecedor, cnpj, data_nf, link, observacao, disponivel, garantia, status, nomeRede) VALUES ('".$_POST['inputTipo']."', '".$patrimonios[$i]."', '".$_POST['inputMarca']."', '".$_POST['inputModelo']."', '".$tags[$i]."', '".$_POST['inputNumeroNota']."', '".$_POST['inputFornecedor']."', '".$_POST['inputCnpj']."', '".$dataNota."', '".$notaFiscal."', '".$_POST['inputObservacao']."', '".$disponivel."', '".$_POST['inputGarantia']."','".$_POST['inputStatus']."', '".$nomeRede."')";
 			$res = sqlsrv_query($con, $sql);		
 			$resultado = "Equipamento Inserido com Sucesso!";	
+			//echo $sql;
 
 			$lastRes = sqlsrv_query($con, "SELECT SCOPE_IDENTITY()");
 			$lastId = sqlsrv_fetch_array($lastRes)[0];

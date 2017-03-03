@@ -723,7 +723,16 @@ form#editarEquipamento p, form#editarLicensa p {
     color: #666;
 }
 
+#editarEquipamento label {
+    background: transparent;
+    display: block;
+    text-align: right;
+    width: 85%;
+}
 
+#editarEquipamento label select, #editarEquipamento label input {
+    display: inline-block;
+}
 
 @media screen and (max-width: 1240px) {
     main {
@@ -1139,4 +1148,39 @@ a.totais {
 
 a.totais:hover {
     opacity: 0.79;
+}
+
+
+input#buscaGlobal {
+    width: 100%;
+    border: #FFF 7px solid;
+    background: #DDD;
+    font-size: 52px;
+    margin-bottom: 7px;
+    color: #777;
+    padding: 12px;
+}
+
+
+div#resultadoAjax2 {
+    display: none;
+    padding: 7px;
+    background: #EEE;
+    margin: -7px 7px 16px;
+}
+
+.resultadosDinamicos {
+    padding: 12px;
+    color: #444;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.resultadosDinamicos:nth-child(odd) {
+    background: #FFF;
+}
+
+.resultadosDinamicos:hover {
+    background: #de9931;
+    color: #FFF;
 }

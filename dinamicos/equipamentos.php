@@ -26,7 +26,7 @@
 	<a style="background-image: url(img/fundoPorcento.jpg);
     background-position: left top;
     background-size: {{porcento2}}% 100%;
-    background-repeat: no-repeat;" class='totais' ng-click="filtro='Alocado'" title="{{porcento2}}%" ng-bind="alocados"></a><a style="background-image: url(img/fundoPorcento.jpg);
+    background-repeat: no-repeat;" class='totais' ng-click="alocar()" title="{{porcento2}}%" ng-bind="alocados"></a><a style="background-image: url(img/fundoPorcento.jpg);
     background-position: left top;
     background-size: {{porcento1}}% 100%;
     background-repeat: no-repeat;" class='totais' title="{{porcento1}}%" ng-bind="completos" ng-click="filtro='Completo'"></a><a class='totais' ng-bind="total" ng-click="filtro=''"></a>
@@ -92,7 +92,7 @@
 		$setor = "itemAlocado";
 		$alocados++;
 	}
-	else $setor = "";
+	else $setor = "Sem Setor";
 
 	if(!empty($row['setor']) && !empty($row['tag']) && !empty($row['nomeMarca']) && !empty($row['modelo']) && !empty($row['data_nf'])) {
 		$completo = "itemCompleto";
@@ -129,6 +129,11 @@
 
 	  $scope.exibirBaixas = function () {
 		    $scope.filtro2 = x.status != "Baixa";
+		}
+
+	  $scope.alocar = function () {
+	  		if($scope.filtro == "alocado") $scope.filtro = "Sem Setor";
+		    else $scope.filtro = "alocado";
 		}
 
 });

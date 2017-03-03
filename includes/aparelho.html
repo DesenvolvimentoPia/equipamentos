@@ -18,7 +18,7 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 	<input type="hidden" name="hiddenUpdate" value="true">
 	<input type="hidden" name="hiddenEquipamento" value="<?=$rowEquipamento['id']?>">
 
-	<select name="inputTipo" id="inputTipo" required>
+	<label>Categoria: <select name="inputTipo" id="inputTipo" required>
 		<?php
 		$sqlTipo = "SELECT * FROM relatorios_tipos WHERE tipo = 1 ORDER BY id";
 		$resTipo = sqlsrv_query($con, $sqlTipo);
@@ -26,9 +26,13 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 		while($rowTipo = sqlsrv_fetch_array($resTipo)) { ?>		
 		<option <?php if($rowTipo['id'] == $rowEquipamento['tipo']) { $tipoAtual = $rowTipo['id']; echo "selected"; } ?> value="<?=$rowTipo['id']?>"><?=$rowTipo['nome']?></option>
 		<?php } ?>
-	</select><span>*</span>
+	</select></label><span>*</span>
 
-	<select name="inputMarca" id="inputMarca">
+	<?php if($tipoAtual == 1 || $tipoAtual == 3) { ?>
+	<label>Nome na Rede: <input placeholder="Nome na Rede" type="text" name="nomeRede" id="nomeRede" value="<?=$rowEquipamento['nomeRede']?>"></label>
+	<?php } ?>
+
+	<label>Marca: <select name="inputMarca" id="inputMarca">
 		<option value="0" <?php if($rowEquipamento['marca'] == 0) echo "selected"; ?>>Sem Marca</option>
 		<?php
 		$sqlMarca = "SELECT * FROM relatorios_listas WHERE tipo = 18 ORDER BY id";
@@ -37,14 +41,14 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 		while($rowMarca = sqlsrv_fetch_array($resMarca)) { ?>		
 		<option value="<?=$rowMarca['id']?>" <?php if($rowEquipamento['marca'] == $rowMarca['id']) echo "selected"; ?>><?=$rowMarca['nome']?></option>
 		<?php } ?>
-	</select>
+	</select></label>
 
-	<input value="<?=$rowEquipamento['modelo']?>" placeholder="Modelo" type="text" name="inputModelo" id="inputModelo">
-	<input value="<?=$rowEquipamento['patrimonio']?>" placeholder="Patrimônio" type="text" name="inputPatrimonio" id="inputPatrimonio" required><span>*</span>
-	<input value="<?=$rowEquipamento['tag']?>" placeholder="TAG" type="text" name="inputTag" id="inputTag">
+	<label>Modelo: <input value="<?=$rowEquipamento['modelo']?>" placeholder="Modelo" type="text" name="inputModelo" id="inputModelo"></label>
+	<label>Patrimônio: <input value="<?=$rowEquipamento['patrimonio']?>" placeholder="Patrimônio" type="text" name="inputPatrimonio" id="inputPatrimonio" required></label><span>*</span>
+	<label>TAG: <input value="<?=$rowEquipamento['tag']?>" placeholder="TAG" type="text" name="inputTag" id="inputTag"></label>
 
 
-	<select name="inputFornecedor" id="inputFornecedor">
+	<label>Fornecedor: <select name="inputFornecedor" id="inputFornecedor">
 		<option value="0" <?php if($rowEquipamento['fornecedor'] == 0) echo "selected"; ?>>Sem Fornecedor</option>
 		<?php
 		$sqlFornecedor = "SELECT * FROM relatorios_listas WHERE tipo = 17 ORDER BY id";
@@ -53,25 +57,27 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 		while($rowFornecedor = sqlsrv_fetch_array($resFornecedor)) { ?>		
 		<option value="<?=$rowFornecedor['id']?>" <?php if($rowEquipamento['fornecedor'] == $rowFornecedor['id']) echo "selected"; ?>><?=$rowFornecedor['nome']?></option>
 		<?php } ?>
-	</select>
+	</select></label>
 
-	<input value="<?=$rowEquipamento['cnpj']?>" placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj">
+	<label>CNPJ: <input value="<?=$rowEquipamento['cnpj']?>" placeholder="CNPJ Fornecedor" type="text" name="inputCnpj" id="inputCnpj"></label>
 
 	<input type="hidden" name="inputNotaAtual" id="inputNotaAtual" value="<?=$rowEquipamento['link']?>">
 	<?php if(isset($rowEquipamento['link'])) { ?><a id="linkNotaFiscal" href="<?=$rowEquipamento['link']?>" target="_blank">Veja a Nota Atual</a><?php } ?>	
 	<p>Enviar nova Nota Fiscal</p>
 	<input type="file" name="inputNotaFiscal" id="inputNotaFiscal">
-	<input value="<?=$rowEquipamento['nota_fiscal']?>" placeholder="N° Nota Fiscal" type="text" name="inputNumeroNota" id="inputNumeroNota">
-	<input value="<?=$rowEquipamento['data_nf']->format('d/m/Y')?>" name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$">
+	
+	<label>N° Nota: <input value="<?=$rowEquipamento['nota_fiscal']?>" placeholder="N° Nota Fiscal" type="text" name="inputNumeroNota" id="inputNumeroNota"></label>
+	
+	<label>Data da Nota: <input value="<?=$rowEquipamento['data_nf']->format('d/m/Y')?>" name="inputDataNotaFiscal" id="inputDataNotaFiscal" placeholder="Data da Nota Fiscal" title="dd/mm/aaaa" pattern="[0-9]{2}\/[0-9]{2}\/[0-9]{4}$"></label>
 
-	<input value="<?=$rowEquipamento['garantia']?>" placeholder="Garantia Até" type="text" name="inputGarantia" id="inputGarantia">
+	<label>Garantia: <input value="<?=$rowEquipamento['garantia']?>" placeholder="Garantia Até" type="text" name="inputGarantia" id="inputGarantia"></label>
 
-	<select name="inputStatus" id="inputStatus" required>
+	<label>Status: <select name="inputStatus" id="inputStatus" required>
 		<option value="">Status</option>
 		<option value="1" <?php if($rowEquipamento['status'] == 1) echo "selected"; ?>>Almox</option>
 		<option value="2" <?php if($rowEquipamento['status'] == 2) echo "selected"; ?>>Entregue</option>
 		<option value="3" <?php if($rowEquipamento['status'] == 3) echo "selected"; ?>>Baixa</option>
-	</select><span>*</span>
+	</select></label><span>*</span>
 
 	<textarea placeholder="Observacao" type="text" name="inputObservacao" id="inputObservacao"><?=$rowEquipamento['observacao']?></textarea>
 	<input <?php if($rowEquipamento['disponivel'] == 1) echo "checked"; ?> type="checkbox" name="inputDisponivel" value="1"> Disponível
@@ -152,6 +158,7 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 			$unidade = $explodir[0];
 		?>
 		<p><?=$rowCompare['nome'];?></p>
+		<a class="botao" onclick="document.getElementById('selectUnidade').style.margin = '0px auto 12px'; document.getElementById('selectUnidade').style.height = '106px';">Alterar Unidade</a>
 		<?php } else { ?>
 
 		<a class="botao" onclick="document.getElementById('selectUnidade').style.margin = '0px auto 12px'; document.getElementById('selectUnidade').style.height = '106px';">Adicionar Unidade</a>
@@ -197,7 +204,7 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 
 		?>
 
-		<option <?php if(isset($setorAtual) && $nome[$i]['codigo'] == $setorAtual) echo "selected"; ?> value="<?=$nome2[$i]['codigo'];?>"><?=$nome2[$i]['codigo'];?> - <?=$nome2[$i]['nome'];?></option>
+		<option <?php if(isset($setorAtual) && $nome2[$i]['codigo'] == $setorAtual) echo "selected"; ?> value="<?=$nome2[$i]['codigo'];?>"><?=$nome2[$i]['codigo'];?> - <?=$nome2[$i]['nome'];?></option>
 
 		<?php } } ?>
 			
@@ -220,6 +227,10 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 			$rowCompare = sqlsrv_fetch_array($resCompare);
 		?>
 		<p><?=$rowCompare['id_setor'];?> - <?=$rowCompare['nome'];?></p>
+
+
+		<a class="botao" onclick="document.getElementById('selectUnidade2').style.margin = '0px auto 12px'; document.getElementById('selectUnidade2').style.height = '106px';">Alterar Centro de Custo</a>
+
 		<?php } else { ?>
 
 		<a class="botao" onclick="document.getElementById('selectUnidade2').style.margin = '0px auto 12px'; document.getElementById('selectUnidade2').style.height = '106px';">Adicionar Centro de Custo</a>
@@ -294,6 +305,9 @@ $rowEquipamento = sqlsrv_fetch_array($resEquipamento);
 			$rowCompare = sqlsrv_fetch_array($resCompare);
 		?>
 		<p style="margin-bottom: 16px;"><?=$rowCompare['nome'];?></p>
+
+		<a class="botao" onclick="document.getElementById('selectUnidade3').style.margin = '0px auto 12px'; document.getElementById('selectUnidade3').style.height = '106px';">Alterar Responsável</a>
+
 		<?php } else { ?>
 
 		<a class="botao" onclick="document.getElementById('selectUnidade3').style.margin = '0px auto 12px'; document.getElementById('selectUnidade3').style.height = '106px';">Adicionar Responsável</a>

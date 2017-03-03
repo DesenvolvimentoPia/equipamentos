@@ -127,8 +127,11 @@ if(!empty($_POST['hiddenUpdate'])) {
 			$sqlCompare = "SELECT * FROM relatorios_equipamentos WHERE id = ".$_POST['hiddenEquipamento'];
 			$resCompare = sqlsrv_query($con, $sqlCompare);
 			$rowCompare = sqlsrv_fetch_array($resCompare);
+		
+			if(empty($_POST['nomeRede'])) $nomeRede = "";
+			else $nomeRede = $_POST['nomeRede'];
 
-			$sql = "UPDATE relatorios_equipamentos SET tipo = '".$_POST['inputTipo']."', patrimonio = '".$_POST['inputPatrimonio']."', marca = '".$_POST['inputMarca']."', modelo = '".$_POST['inputModelo']."', tag = '".$_POST['inputTag']."', nota_fiscal = '".$_POST['inputNumeroNota']."', fornecedor = '".$_POST['inputFornecedor']."', cnpj = '".$_POST['inputCnpj']."', data_nf = '".$dataNota."', link = '".$notaFiscal."', observacao = '".$_POST['inputObservacao']."', garantia = '".$_POST['inputGarantia']."', status = '".$_POST['inputStatus']."', disponivel = '".$disponivel."' WHERE id = '".$_POST['hiddenEquipamento']."'";
+			$sql = "UPDATE relatorios_equipamentos SET tipo = '".$_POST['inputTipo']."', patrimonio = '".$_POST['inputPatrimonio']."', marca = '".$_POST['inputMarca']."', modelo = '".$_POST['inputModelo']."', tag = '".$_POST['inputTag']."', nota_fiscal = '".$_POST['inputNumeroNota']."', fornecedor = '".$_POST['inputFornecedor']."', cnpj = '".$_POST['inputCnpj']."', data_nf = '".$dataNota."', link = '".$notaFiscal."', observacao = '".$_POST['inputObservacao']."', garantia = '".$_POST['inputGarantia']."', status = '".$_POST['inputStatus']."', disponivel = '".$disponivel."', nomeRede = '".$nomeRede."' WHERE id = '".$_POST['hiddenEquipamento']."'";
 			$res = sqlsrv_query($con, $sql);		
 			$resultado = "Equipamento alterado com Sucesso!";
 
@@ -146,6 +149,7 @@ if(!empty($_POST['hiddenUpdate'])) {
 			if($_POST['inputObservacao'] != $rowCompare['observacao']) $alterado .= "O Campo OBSERVACAO foi Alterado de ".$rowCompare['observacao']." para ".$_POST['inputObservacao'].". ";
 			if($_POST['inputGarantia'] != $rowCompare['garantia']) $alterado .= "O Campo GARANTIA foi Alterado de ".$rowCompare['garantia']." para ".$_POST['inputGarantia'].". ";
 			if($_POST['inputStatus'] != $rowCompare['status']) $alterado .= "O Campo STATUS foi Alterado de ".$rowCompare['status']." para ".$_POST['inputStatus'].". ";
+			if($nomeRede != $rowCompare['nomeRede']) $alterado .= "O Campo NOME NA REDE foi Alterado de ".$rowCompare['nomeRede']." para ".$nomeRede.". ";
 			if($disponivel != $rowCompare['disponivel']) $alterado .= "O Campo DISPONIBILIDADE foi Alterado de ".$rowCompare['disponivel']." para ".$disponivel.". ";
 
 			$alterado = str_replace(" .", " VAZIO.", $alterado);

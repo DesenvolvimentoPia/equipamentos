@@ -23,6 +23,10 @@ include "./conexao.php";
 		<?php } ?>
 	</select><span>*</span>
 
+	<?php if($tipoAtual == 1 || $tipoAtual == 3) { ?>
+	<input placeholder="Nome na Rede" type="text" name="nomeRede" id="nomeRede">
+	<?php } ?>
+	
 	<select name="inputMarca" id="inputMarca">
 		<option value="0" selected>Sem Marca</option>
 		<?php

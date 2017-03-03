@@ -1,3 +1,8 @@
+
+<input name="buscaGlobalOculto" id="buscaGlobalOculto" type="hidden">
+<input name="buscaGlobal" id="buscaGlobal" placeholder="Busca Global" onkeyup="checkPesquisa2()" onblur="fechaDinamico2()">
+<div id="resultadoAjax2"></div>
+
 <h1>EQUIPAMENTOS</h1>
 
 
@@ -51,4 +56,38 @@ while($row = sqlsrv_fetch_array($res)) {
             });
         });
     });
+
+
+
+
+var botaoPesquisa2;
+
+function checkPesquisa2() {
+  if(botaoPesquisa2 != document.getElementById("buscaGlobal").value) {
+      botaoPesquisa2 = document.getElementById("buscaGlobal").value;
+
+    if(botaoPesquisa2.length > 2) {
+          
+          $("#resultadoAjax2").fadeIn();
+          $("#resultadoAjax2").html('<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>');
+
+                  // Faz requisição ajax e envia o ID da Categoria via método POST
+              $.post("private/global.php", {usu: botaoPesquisa2}, function(resposta) {
+
+                 // Coloca a resposta na DIV
+                 setTimeout(function() { $("#resultadoAjax2").html(resposta); }, 700);
+             
+              });
+
+      }
+
+      if(botaoPesquisa2.length <= 2) $("#resultadoAjax2").fadeOut();
+  }
+}
+
+function fechaDinamico2() {
+  $("#resultadoAjax2").fadeOut(); 
+  setTimeout(function() { if (document.getElementById('buscaGlobalOculto').value == '') document.getElementById('buscaGlobal').value = ''; }, 350);
+}
+
 </script>

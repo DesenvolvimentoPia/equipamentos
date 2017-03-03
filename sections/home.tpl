@@ -70,7 +70,34 @@
         return 'rgba(' + randomScalingFactor() + ',' + randomScalingFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
     };
 
-    var cor = ["#DD7932", "#CC7016", "#DDAA23", "#EC7B16", "#BB9a25", "#CC7707", "#ECa832", "#BB9952", "#ee9932", "#cc9952", "#be8a52", "#f07a53", "#DC8a23", "#AA8a23", "#cCAA23", "#Fe7016", "#AAA032", "#AB5234", "#ce8a23"];
+    var cor = [
+
+    <?php 
+
+    $outros = 0;
+
+    function random_color() {
+	    $letters = '0123456789ABCDEF';
+	    $color = '#';
+	    for($i = 0; $i < 6; $i++) {
+	        $index = rand(0,5);
+
+	        if($i < 2) $index += 7;
+	        else if($i < 4) $index += 4;
+	        else $index -= 3;
+	        if($index < 0) $index = 0;
+
+	        $color .= $letters[$index];
+	    }
+	    return $color;
+	}
+
+    for($i = 0; $i < 50; $i++) {
+    	if($i == 0) echo '"'.random_color().'"';
+    	else echo ', "'.random_color().'"';
+    }
+    ?>
+    ];
 
     var config = {
         type: 'pie',
@@ -88,9 +115,20 @@
 			//echo $sql;
 			$res2 = sqlsrv_query($con, $sql);
 			$row2 = sqlsrv_fetch_array($res2);
+
+
+
+			if($row2['qtd'] > 30) {
 			
 				if($i == 0) {?>"<?=$row2['qtd']?>"<?php }
-				else { ?>, "<?=$row2['qtd']?>"<?php } $i++; } ?>
+				else { ?>, "<?=$row2['qtd']?>"<?php } 
+
+				$i++; }
+
+				else $outros += $row2['qtd'];  
+			}
+
+				?>
                 ],
                 backgroundColor: [
                     <?php 
@@ -104,9 +142,17 @@
 			//echo $sql;
 			$res2 = sqlsrv_query($con, $sql);
 			$row2 = sqlsrv_fetch_array($res2);
+
+			if($row2['qtd'] > 30) {
+			
 			
 				if($i == 0) {?>cor[<?=$i?>]<?php }
-				else { ?>, cor[<?=$i?>]<?php } $i++; } ?>
+				else { ?>, cor[<?=$i?>]<?php } $i++; } 
+			}
+
+
+			if($outros > 0) { ?>, cor[<?=$i?>]<?php } ?>
+
 				
 
                 ],
@@ -116,10 +162,20 @@
              $sql = "SELECT * FROM relatorios_tipos WHERE tipo = '1' ORDER BY id";
 			//echo $sql;
 			$res = sqlsrv_query($con, $sql);
-			$i = 0;
+			$total = 0;
 			while($row = sqlsrv_fetch_array($res)) {
-				if($i == 0) {?>"<?=$row['nome']?>"<?php }
-				else { ?>, "<?=$row['nome']?>"<?php } $i++; } ?>
+
+			if($total < $i - 1) {
+
+				if($total == 0) {?>"<?=$row['nome']?>"<?php }
+				else { ?>, "<?=$row['nome']?>"<?php } 
+
+				$total++; 
+				} 
+			}
+			
+
+			if($outros > 0) { ?>, "Outros"<?php } ?>
             ]
         },
         options: {
@@ -166,12 +222,23 @@
 			//echo $sql;
 			$res2 = sqlsrv_query($con, $sql);
 			$row2 = sqlsrv_fetch_array($res2);
+
+			if($row2['qtd'] > 30) {
 			
-				if($i == 0) {?>"<?=$row2['qtd']?>"<?php }
-				else { ?>, "<?=$row2['qtd']?>"<?php } $i++; } ?>
+				if($i == 0) { ?>"<?=$row2['qtd']?>"<?php }
+				else { ?>, "<?=$row2['qtd']?>"<?php } 
+
+				$i++; 
+			}
+
+			else $outros += $row2['qtd'];   }
+
+			if($outros > 0) { ?>, "<?=$outros?>"<?php }
+			 ?>
                 ],
                 backgroundColor: [
                     <?php 
+              
 
               $sql = "SELECT * FROM relatorios_listas WHERE tipo = '17' ORDER BY id";
 			//echo $sql;
@@ -182,9 +249,14 @@
 			//echo $sql;
 			$res2 = sqlsrv_query($con, $sql);
 			$row2 = sqlsrv_fetch_array($res2);
+
+			if($row2['qtd'] > 30) {
 			
 				if($i == 0) {?>cor[<?=$i?>]<?php }
-				else { ?>, cor[<?=$i?>]<?php } $i++; } ?>
+				else { ?>, cor[<?=$i?>]<?php } $i++; }
+				}
+			if($outros > 0) { ?>, cor[<?=$i?>]<?php }
+			 ?>
 				
 
                 ],
@@ -194,10 +266,16 @@
              $sql = "SELECT * FROM relatorios_listas WHERE tipo = '17' ORDER BY id";
 			//echo $sql;
 			$res = sqlsrv_query($con, $sql);
-			$i = 0;
+			$total = 0;
 			while($row = sqlsrv_fetch_array($res)) {
-				if($i == 0) {?>"<?=$row['nome']?>"<?php }
-				else { ?>, "<?=$row['nome']?>"<?php } $i++; } ?>
+			
+			if($total < $i) {
+			
+				if($total == 0) {?>"<?=$row['nome']?>"<?php }
+				else { ?>, "<?=$row['nome']?>"<?php } $total++; } 
+			}
+
+			if($outros > 0) { ?>, "Outros"<?php } ?>
             ]
         },
         options: {
